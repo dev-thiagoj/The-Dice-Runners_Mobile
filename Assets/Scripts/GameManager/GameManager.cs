@@ -105,7 +105,7 @@ public class GameManager : Singleton<GameManager>
         activeTurbos = FindObjectsOfType(typeof(ItemCollectableTurbo)).Length;
 
         maxPossibleScore = activeDices * (activeTurbos + PlayerController.Instance.maxTurbos);
-        showUILevel.text = "Level: " + LevelManager.Instance.level;
+        showUILevel.text = "Level " + LevelManager.Instance.level;
     }
 
     void TurnAllStarsOff()
