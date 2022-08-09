@@ -12,8 +12,8 @@ public class GameManager : Singleton<GameManager>
 
     [Header("References")]
     public GameObject mainMenu;
-    public GameObject uiValues;
-    //public GameObject cameraCanvas;
+    public GameObject uiContainer;
+    public GameObject virtualJoysticks;
     public TextMeshProUGUI scoreText = null;
     public TextMeshProUGUI diceText = null;
     public TextMeshProUGUI maxScoreText = null;
@@ -54,10 +54,8 @@ public class GameManager : Singleton<GameManager>
     [Header("Female Animation")]
     public Animator femaleAnim;
 
-    [Header("Debug")]
-    public TextMeshProUGUI levelDebug;
-    public TextMeshProUGUI piecesDebug;
-    public TextMeshProUGUI maxPosScoreDebug;
+    [Header("UI Level")]
+    public TextMeshProUGUI showUILevel;
     #endregion
 
     private void OnEnable()
@@ -82,7 +80,8 @@ public class GameManager : Singleton<GameManager>
     {
         Time.timeScale = 1;
         //cameraCanvas.SetActive(false);
-        uiValues.SetActive(false);
+        uiContainer.SetActive(false);
+        virtualJoysticks.SetActive(false);
 
         if (isRestart == 0)
         {
@@ -93,8 +92,6 @@ public class GameManager : Singleton<GameManager>
         else StartRun();
 
         Invoke(nameof(ActiveCollectablesCount), 2);
-
-        
     }
 
     private void Update()
@@ -106,11 +103,9 @@ public class GameManager : Singleton<GameManager>
     {
         activeDices = FindObjectsOfType(typeof(ItemCollectableCoin)).Length;
         activeTurbos = FindObjectsOfType(typeof(ItemCollectableTurbo)).Length;
-        levelDebug.text = "Dices = " + activeDices;
-        piecesDebug.text = "Turbos = " + activeTurbos;
 
         maxPossibleScore = activeDices * (activeTurbos + PlayerController.Instance.maxTurbos);
-        maxPosScoreDebug.text = "Max Pos= " + maxPossibleScore;
+        showUILevel.text = "Level: " + LevelManager.Instance.level;
     }
 
     void TurnAllStarsOff()
@@ -136,12 +131,18 @@ public class GameManager : Singleton<GameManager>
         SFXPool.Instance.CreatePool();
         _isGameStarted = true;
         //cameraCanvas.SetActive(true);
-        uiValues.SetActive(true);
         //StartCoroutine(TutorialCoroutine());
         PlayerController.Instance.InvokeStartRun();
         RollDice.Instance.InvokeStartRoll();
         RollDice.Instance.CallDiceSFX();
         Cursor.visible = false;
+        Invoke(nameof(ShowInGameUI), 6);
+    }
+
+    public void ShowInGameUI()
+    {
+        uiContainer.SetActive(true);
+        virtualJoysticks.SetActive(true);
     }
 
     public void PauseGame()
@@ -167,14 +168,16 @@ public class GameManager : Singleton<GameManager>
     public void EndGame()
     {
         PlayerController.Instance.canRun = false;
-        uiValues.SetActive(false);
+        uiContainer.SetActive(false);
+        virtualJoysticks.SetActive(false);
         Invoke(nameof(ShowGameOverScreen), 2);
     }
 
     public void LevelComplete()
     {
         PlayerController.Instance.canRun = false;
-        uiValues.SetActive(false);
+        uiContainer.SetActive(false);
+        virtualJoysticks.SetActive(false);
         femaleAnim.SetTrigger("FemaleWin");
         PlayerController.Instance.animator.SetTrigger("EndGame");
         UpdateUI();

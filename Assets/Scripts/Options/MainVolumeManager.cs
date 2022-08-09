@@ -11,6 +11,11 @@ public class MainVolumeManager : MonoBehaviour
     public Slider volumeSlider;
     public TextMeshProUGUI sliderValue;
 
+    private void Awake()
+    {
+        VolumeAplly();
+    }
+
     private void Update()
     {
         ShowSliderValue();

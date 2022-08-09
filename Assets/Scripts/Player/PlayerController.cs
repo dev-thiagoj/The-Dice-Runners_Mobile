@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Singleton;
 using DG.Tweening;
 
@@ -14,6 +15,9 @@ public class PlayerController : Singleton<PlayerController>
     public Animator animator;
     public AudioSource audioSource;
     public List<AudioClip> sfxPlayer;
+
+    [Header("Inputs")]
+    public PlayerInputSystem playerInputs;
 
     [Header("Movement")]
     public float runSpeed = 5;
@@ -36,7 +40,7 @@ public class PlayerController : Singleton<PlayerController>
     public float turboSpeed;
     public int maxTurbos = 3;
     public int _currTurbo;
-    public float turboTime;
+    public float turboTime = 2;
     bool _turboOn = false;
 
     [Header("Magnetic Powerup")]
@@ -78,9 +82,34 @@ public class PlayerController : Singleton<PlayerController>
         if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
     }
 
+    #region === OnEnable/Disable ===
+
+    private void OnEnable()
+    {
+        playerInputs.Enable();
+        Actions.findFemaleAnim += FindLookAtTarget;
+    }
+
+    private void OnDisable()
+    {
+        playerInputs.Disable();
+        Actions.findFemaleAnim -= FindLookAtTarget;
+    }
+
+    #endregion
+
     protected override void Awake()
     {
         base.Awake();
+
+        playerInputs = new PlayerInputSystem();
+
+        playerInputs.Gameplay.Jump.performed += ctx => Jump();
+        playerInputs.Gameplay.Turbo.performed += ctx => TurboPlayer();
+
+        playerInputs.Gameplay.Stop.performed += ctx => Walk();
+        playerInputs.Gameplay.Stop.canceled += ctx => BackRun();
+
     }
 
     // Start is called before the first frame update
@@ -98,8 +127,8 @@ public class PlayerController : Singleton<PlayerController>
         if (canRun)
         {
             IsGrounded();
-            Move();
-            if (IsGrounded()) Jump();
+            Movement();
+            //if (IsGrounded()) Jump();
             Bounds();
             if (IsGrounded()) Inputs();
         }
@@ -140,7 +169,32 @@ public class PlayerController : Singleton<PlayerController>
         //Actions.startTutorial();
     }
 
-    public void Move()
+    // New Input System _ Mobile
+    public void Movement()
+    {
+        Vector2 movement = playerInputs.Gameplay.Move.ReadValue<Vector2>();
+        Vector3 move = new Vector3((movement.x * -_currSideSpeed), 0, _currRunSpeed);
+
+        _vSpeed -= gravity * Time.deltaTime;
+        move.y = _vSpeed;
+
+        characterController.Move(move * Time.deltaTime);
+    }
+
+    public void Jump()
+    {
+        if (characterController.isGrounded)
+        {
+            _vSpeed = _currJumpForce;
+            _currSideSpeed = 0;
+            animator.SetTrigger("Jump");
+            SFXPool.Instance.Play(SFXType.JUMP_02);
+            Invoke(nameof(BackRun), 2);
+        }
+    }
+
+    // Old Input System
+    /*public void Move()
     {
         if (isInvencible) _currRunSpeed = 6;
 
@@ -166,7 +220,7 @@ public class PlayerController : Singleton<PlayerController>
                 Invoke(nameof(BackRun), 2);
             }
         }
-    }
+    }*/
 
     public void Walk()
     {
@@ -251,8 +305,8 @@ public class PlayerController : Singleton<PlayerController>
         if (!_turboOn)
         {
             _turboOn = true;
-            SFXPool.Instance.Play(SFXType.USE_TURBO_06);
             _currRunSpeed = turboSpeed;
+            SFXPool.Instance.Play(SFXType.USE_TURBO_06);
             yield return new WaitForSeconds(turboTime);
         }
 
@@ -268,8 +322,8 @@ public class PlayerController : Singleton<PlayerController>
             StartCoroutine(MagneticCoroutine());
             forceField.StartParticleField();
             SFXPool.Instance.Play(SFXType.USE_MAGNETIC_08);
-        } 
-            
+        }
+
     }
 
     public IEnumerator MagneticCoroutine()
@@ -328,14 +382,4 @@ public class PlayerController : Singleton<PlayerController>
     }
 
     #endregion
-
-    private void OnEnable()
-    {
-        Actions.findFemaleAnim += FindLookAtTarget;
-    }
-
-    private void OnDisable()
-    {
-        Actions.findFemaleAnim -= FindLookAtTarget;
-    }
 }

@@ -36,6 +36,7 @@ public class LevelManager : Singleton<LevelManager>
     private void Start()
     {
         Init();
+        if (level == 0) level = 1;
     }
 
     public void Init()
@@ -62,7 +63,7 @@ public class LevelManager : Singleton<LevelManager>
     public void AddLevel()
     {
         PlayerPrefs.SetInt("piecesNumber", numberOfPieces);
-        level += 1;
+        level ++;
         PlayerPrefs.SetInt("level", level);
     }
 
