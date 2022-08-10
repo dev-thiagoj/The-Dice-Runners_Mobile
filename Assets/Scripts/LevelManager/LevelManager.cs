@@ -115,6 +115,7 @@ public class LevelManager : Singleton<LevelManager>
 
     void CreateLevel()
     {
+        PiecesManager.Instance.AddPiecesToGame();
         BalanceWithEmptyPieces();
         StartCoroutine(CreateLevelPiecesCoroutine());
 
@@ -153,7 +154,7 @@ public class LevelManager : Singleton<LevelManager>
 
     void BalanceWithEmptyPieces()
     {
-        var numberOfEmptys = levelPieces.Count / 3;
+        var numberOfEmptys = levelPieces.Count / 2;
 
         for (int i = 0; i < numberOfEmptys; i++)
         {
