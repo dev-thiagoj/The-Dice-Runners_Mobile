@@ -291,7 +291,7 @@ public class PlayerController : Singleton<PlayerController>
     #region === POWERUPS ===
     public void TurboPlayer()
     {
-        if (_currTurbo < maxTurbos)
+        if (_currTurbo < maxTurbos && characterController.isGrounded)
         {
             StartCoroutine(TurboCoroutine());
             _currTurbo++;

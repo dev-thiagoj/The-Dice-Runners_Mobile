@@ -12,15 +12,16 @@ public class PiecesManager : Singleton<PiecesManager>
     {
         base.Awake();
     }
-
-    [NaughtyAttributes.Button]
     public void AddPiecesToGame()
     {
         for (int i = 0; i <= _index; i++)
         {
             LevelManager.Instance.levelPieces.Add(pieces[i]);
         }
+    }
 
+    public void AddIndex()
+    {
         _index += 1;
         PlayerPrefs.SetInt("pieceIndex", _index);
     }

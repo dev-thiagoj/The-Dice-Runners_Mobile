@@ -25,6 +25,6 @@ public class ItemRotate : MonoBehaviour
 
     void Update()
     {
-        transform.Rotate(_axis * speed * Time.deltaTime);
+        transform.Rotate(_axis * speed * Time.deltaTime * 100);
     }
 }

@@ -187,6 +187,7 @@ public class GameManager : Singleton<GameManager>
         miniMap.gameObject.SetActive(false);
         femaleAnim.SetTrigger("FemaleWin");
         PlayerController.Instance.animator.SetTrigger("EndGame");
+        PiecesManager.Instance.AddIndex();
         UpdateUI();
         Invoke(nameof(ShowLevelCompleteScreen), 5);
     }

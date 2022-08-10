@@ -154,7 +154,7 @@ public class LevelManager : Singleton<LevelManager>
 
     void BalanceWithEmptyPieces()
     {
-        var numberOfEmptys = levelPieces.Count / 2;
+        var numberOfEmptys = levelPieces.Count / 3;
 
         for (int i = 0; i < numberOfEmptys; i++)
         {
