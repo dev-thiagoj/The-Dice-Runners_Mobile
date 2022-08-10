@@ -35,7 +35,7 @@ public class RollDice : Singleton<RollDice>
         {
             rigidbody.transform.position += Vector3.forward * moveSpeed * Time.deltaTime;
             
-            diceToRoll.transform.Rotate(0.0f, -speedRoll, 0.0f);
+            diceToRoll.transform.Rotate(0.0f, -speedRoll * Time.deltaTime, 0.0f);
         }
     }
 
