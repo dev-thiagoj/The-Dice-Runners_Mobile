@@ -56,6 +56,9 @@ public class GameManager : Singleton<GameManager>
 
     [Header("UI Level")]
     public TextMeshProUGUI showUILevel;
+
+    [Header("Mini Map")]
+    public Transform miniMap;
     #endregion
 
     private void OnEnable()
@@ -82,6 +85,7 @@ public class GameManager : Singleton<GameManager>
         //cameraCanvas.SetActive(false);
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
+        miniMap.gameObject.SetActive(false);
 
         if (isRestart == 0)
         {
@@ -143,6 +147,7 @@ public class GameManager : Singleton<GameManager>
     {
         uiContainer.SetActive(true);
         virtualJoysticks.SetActive(true);
+        miniMap.gameObject.SetActive(true);
     }
 
     public void PauseGame()
@@ -170,6 +175,7 @@ public class GameManager : Singleton<GameManager>
         PlayerController.Instance.canRun = false;
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
+        miniMap.gameObject.SetActive(false);
         Invoke(nameof(ShowGameOverScreen), 2);
     }
 
@@ -178,8 +184,10 @@ public class GameManager : Singleton<GameManager>
         PlayerController.Instance.canRun = false;
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
+        miniMap.gameObject.SetActive(false);
         femaleAnim.SetTrigger("FemaleWin");
         PlayerController.Instance.animator.SetTrigger("EndGame");
+        PiecesManager.Instance.AddIndex();
         UpdateUI();
         Invoke(nameof(ShowLevelCompleteScreen), 5);
     }

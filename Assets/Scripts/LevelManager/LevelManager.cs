@@ -115,6 +115,7 @@ public class LevelManager : Singleton<LevelManager>
 
     void CreateLevel()
     {
+        PiecesManager.Instance.AddPiecesToGame();
         BalanceWithEmptyPieces();
         StartCoroutine(CreateLevelPiecesCoroutine());
 

@@ -9,6 +9,7 @@ public class StopDiceByTrigger : MonoBehaviour
         if (other.transform.CompareTag("Dice"))
         {
             RollDice.Instance.canMove = false;
+            RollDice.Instance.StopVFX();
             RollDice.Instance.audioSource.Stop();
         }
     }

@@ -9,8 +9,9 @@ public class RollDice : Singleton<RollDice>
     public Rigidbody rigidbody;
     public Transform diceToRoll;
     public AudioSource audioSource;
+    public ParticleSystem particleSystem;
 
-    [Range(4, 6)]
+    [Range(4, 8)]
     public float speedRoll = 3;
     public float moveSpeed = 5;
     public float startSFXDelay = 3;
@@ -19,6 +20,11 @@ public class RollDice : Singleton<RollDice>
     protected override void Awake()
     {
         base.Awake();
+    }
+
+    private void OnValidate()
+    {
+        if (particleSystem == null) particleSystem = GetComponentInChildren<ParticleSystem>();
     }
 
     #region === DEBUG ===
@@ -35,7 +41,7 @@ public class RollDice : Singleton<RollDice>
         {
             rigidbody.transform.position += Vector3.forward * moveSpeed * Time.deltaTime;
             
-            diceToRoll.transform.Rotate(0.0f, -speedRoll, 0.0f);
+            diceToRoll.transform.Rotate(0.0f, (-speedRoll * Time.deltaTime * 10), 0.0f);
         }
     }
 
@@ -63,5 +69,10 @@ public class RollDice : Singleton<RollDice>
     public void PlaySFX()
     {
         audioSource.Play();
+    }
+
+    public void StopVFX()
+    {
+        particleSystem.Stop();
     }
 }

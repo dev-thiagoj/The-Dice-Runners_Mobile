@@ -56,5 +56,12 @@ public class LoadPrefs : MonoBehaviour
 
             LevelManager.Instance.numberOfPieces = localValue;
         }
+
+        if (PlayerPrefs.HasKey("pieceIndex"))
+        {
+            int localIndex = PlayerPrefs.GetInt("pieceIndex");
+
+            PiecesManager.Instance._index = localIndex;
+        }
     }
 }
