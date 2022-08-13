@@ -44,8 +44,9 @@ public class SoundManager : Singleton<SoundManager>
         {
             button.SetActive(false);
         }
-
+        mainListener.enabled = false;
         soundButtons[_index].SetActive(true);
+        if (_index == 1) mainListener.enabled = true;
         _index++;
 
         if (_index == 2) _index = 0;

@@ -154,6 +154,7 @@ public class GameManager : Singleton<GameManager>
     {
         RollDice.Instance.canMove = false;
         Time.timeScale = 0;
+        miniMap.gameObject.SetActive(false);
         pauseScreen.SetActive(true);
         AudioListener.pause = true;
         Cursor.visible = true;
@@ -166,6 +167,7 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 1;
         RollDice.Instance.canMove = true;
         pauseScreen.SetActive(false);
+        miniMap.gameObject.SetActive(true);                                                                 
         AudioListener.pause = false;
         Cursor.visible = false;
     }

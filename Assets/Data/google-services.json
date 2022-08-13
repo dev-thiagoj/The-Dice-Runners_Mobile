@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "854824773099",
+    "project_id": "the-dice-runners",
+    "storage_bucket": "the-dice-runners.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854824773099:android:b0b307aeb2b89a1dcde5ae",
+        "android_client_info": {
+          "package_name": "com.JamafStudio.TheDiceRunners"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854824773099-jcs9aunntp8e60ev7p4utv1s45l1v4e8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQLazPofTg2SqKcAgtUVl10iK7zvAgr9w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854824773099-jcs9aunntp8e60ev7p4utv1s45l1v4e8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
