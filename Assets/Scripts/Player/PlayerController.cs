@@ -50,12 +50,6 @@ public class PlayerController : Singleton<PlayerController>
     public float magneticTime;
     public bool _hasMagnetic = false;
 
-    [Header("Invencible Powerup")]
-    public MeshRenderer[] playerMeshs;
-    public SkinnedMeshRenderer[] playerSkinned;
-    public int blinksTimes = 100;
-    public bool isInvencible = false;
-
     [Header("Bounds")]
     private float range = 5.6f;
 
@@ -73,11 +67,9 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnValidate()
     {
-        if (characterController == null) characterController = GetComponent<CharacterController>();
-        if (animator == null) animator = GetComponentInChildren<Animator>();
+        //if (characterController == null) characterController = GetComponent<CharacterController>();
+        //if (animator == null) animator = GetComponentInChildren<Animator>();
         if (audioSource == null) audioSource = GetComponentInChildren<AudioSource>();
-        playerMeshs = GetComponentsInChildren<MeshRenderer>();
-        playerSkinned = GetComponentsInChildren<SkinnedMeshRenderer>();
         if (rotationLook == null) rotationLook = GetComponent<RotationLookAt>();
         if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
     }
@@ -334,43 +326,6 @@ public class PlayerController : Singleton<PlayerController>
         MagneticOn(false);
         StopCoroutine(MagneticCoroutine());
     }
-
-    [NaughtyAttributes.Button]
-    public void StartDebugCoroutine()
-    {
-        StartCoroutine(InvencibleCoroutine());
-    }
-
-    public IEnumerator InvencibleCoroutine()
-    {
-        for (int i = 0; i < blinksTimes; i++)
-        {
-            foreach (var mesh in playerMeshs)
-            {
-                mesh.enabled = false;
-            }
-
-            foreach (var skinned in playerSkinned)
-            {
-                skinned.enabled = false;
-            }
-
-            yield return new WaitForSeconds(0.1f);
-
-            foreach (var mesh in playerMeshs)
-            {
-                mesh.enabled = true;
-            }
-
-            foreach (var skinned in playerSkinned)
-            {
-                skinned.enabled = true;
-            }
-
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
-
     #endregion
 
     #region === EXPRESSIONS ===

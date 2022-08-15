@@ -127,15 +127,14 @@ public class GameManager : Singleton<GameManager>
 
     void FindFemaleAnimInScene()
     {
-        femaleAnim = GameObject.Find("CharacterPos").GetComponent<Animator>();
+        femaleAnim = GameObject.Find("CharacterPos").GetComponentInChildren<Animator>();
+        InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter();
     }
 
     public void StartRun()
     {
         SFXPool.Instance.CreatePool();
         _isGameStarted = true;
-        //cameraCanvas.SetActive(true);
-        //StartCoroutine(TutorialCoroutine());
         PlayerController.Instance.InvokeStartRun();
         RollDice.Instance.InvokeStartRoll();
         RollDice.Instance.CallDiceSFX();

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "854824773099",
+    "firebase_url": "https://the-dice-runners-default-rtdb.firebaseio.com",
     "project_id": "the-dice-runners",
     "storage_bucket": "the-dice-runners.appspot.com"
   },
