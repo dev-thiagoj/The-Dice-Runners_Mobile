@@ -127,7 +127,7 @@ public class GameManager : Singleton<GameManager>
 
     void FindFemaleAnimInScene()
     {
-        femaleAnim = GameObject.Find("FemaleCharacter").GetComponent<Animator>();
+        femaleAnim = GameObject.Find("CharacterPos").GetComponent<Animator>();
     }
 
     public void StartRun()
@@ -209,13 +209,13 @@ public class GameManager : Singleton<GameManager>
     public void RestartGame()
     {
         PlayerPrefs.SetInt("isRestart", 1);
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void GoToMenu()
     {
         PlayerPrefs.SetInt("isRestart", 0);
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void ExitApplication()
