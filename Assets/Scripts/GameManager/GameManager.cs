@@ -127,8 +127,8 @@ public class GameManager : Singleton<GameManager>
 
     void FindFemaleAnimInScene()
     {
-        femaleAnim = GameObject.Find("CharacterPos").GetComponentInChildren<Animator>();
         InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter();
+        //femaleAnim = GameObject.Find("CharacterPos").GetComponentInChildren<Animator>();
     }
 
     public void StartRun()

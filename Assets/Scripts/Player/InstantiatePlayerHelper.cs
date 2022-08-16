@@ -7,9 +7,9 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
 {
     public List<GameObject> characters;
     public List<GameObject> endLevelCharacters;
-    //public CharacterController characterController;
+    public GameObject currEndCharacter;
     public int characterIndex = 0;
-    //[SerializeField] GameObject _endLevelCharacterPos;
+    public GameObject endLevelCharacterPos;
     public Cinemachine.CinemachineStateDrivenCamera vcam;
 
     protected override void Awake()
@@ -47,17 +47,20 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
         vcam.m_AnimatedTarget = characters[characterIndex].GetComponent<Animator>();
         PlayerController.Instance.characterController = GameObject.Find("=== PLAYER ===").GetComponentInChildren<CharacterController>();
         PlayerController.Instance.animator = GameObject.Find("=== PLAYER ===").GetComponentInChildren<Animator>();
-        //PlayerController.Instance.characterController = characterController;
         characterIndex++;
         if (characterIndex == 2) characterIndex = 0;
-        //InstantiateEndLevelCharacter();
+        InstantiateEndLevelCharacter();
     }
 
     public void InstantiateEndLevelCharacter()
     {
+        if(currEndCharacter != null) Destroy(currEndCharacter);
+
+        endLevelCharacterPos = GameObject.Find("CharacterPos");
         //instanciar oq não foi escolhido para ficar no fim do level
-        //_endLevelCharacterPos.transform.position = GameManager.Instance.femaleAnim.transform.position;
-        endLevelCharacters[characterIndex].SetActive(true);
-        //endLevelCharacters[characterIndex].transform.position = _endLevelCharacterPos.transform.position;
+        currEndCharacter = Instantiate(characters[characterIndex], endLevelCharacterPos.transform);
+        currEndCharacter.transform.position = endLevelCharacterPos.transform.position;
+        currEndCharacter.gameObject.SetActive(true);
+        GameManager.Instance.femaleAnim = currEndCharacter.GetComponent<Animator>();
     } 
 }

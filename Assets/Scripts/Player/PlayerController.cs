@@ -139,7 +139,7 @@ public class PlayerController : Singleton<PlayerController>
 
     void FindLookAtTarget()
     {
-        rotationLook.target = GameObject.Find("FemaleCharacter").GetComponent<Transform>();
+        rotationLook.target = GameObject.Find("CharacterPos").GetComponent<Transform>();
     }
 
     #region === MOVEMENTS ===
