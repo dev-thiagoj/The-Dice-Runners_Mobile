@@ -33,11 +33,13 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
         }
     }
 
+    // é chamado pelo botão de seleção do personagem no menu
     public void SetIndex(int i)
     {
         ChoosePlayer();
         characterIndex = i;
         InstantiatePlayer();
+        InstantiateEndLevelCharacter();
     }
 
     public void InstantiatePlayer()
@@ -49,18 +51,18 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
         PlayerController.Instance.animator = GameObject.Find("=== PLAYER ===").GetComponentInChildren<Animator>();
         characterIndex++;
         if (characterIndex == 2) characterIndex = 0;
-        InstantiateEndLevelCharacter();
+        //InstantiateEndLevelCharacter();
     }
 
     public void InstantiateEndLevelCharacter()
     {
         if(currEndCharacter != null) Destroy(currEndCharacter);
-
         endLevelCharacterPos = GameObject.Find("CharacterPos");
+        
         //instanciar oq não foi escolhido para ficar no fim do level
-        currEndCharacter = Instantiate(characters[characterIndex], endLevelCharacterPos.transform);
+        currEndCharacter = Instantiate(endLevelCharacters[characterIndex], endLevelCharacterPos.transform);
         currEndCharacter.transform.position = endLevelCharacterPos.transform.position;
         currEndCharacter.gameObject.SetActive(true);
-        GameManager.Instance.femaleAnim = currEndCharacter.GetComponent<Animator>();
+        GameManager.Instance.winLevelAnim = currEndCharacter.GetComponent<Animator>();
     } 
 }

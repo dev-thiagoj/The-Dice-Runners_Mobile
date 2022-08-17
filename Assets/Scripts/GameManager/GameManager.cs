@@ -51,8 +51,8 @@ public class GameManager : Singleton<GameManager>
     public GameObject[] tutorialImages;
     public int _viewed = 0;
 
-    [Header("Female Animation")]
-    public Animator femaleAnim;
+    [Header("Win Level Animation")]
+    public Animator winLevelAnim;
 
     [Header("UI Level")]
     public TextMeshProUGUI showUILevel;
@@ -186,7 +186,7 @@ public class GameManager : Singleton<GameManager>
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
-        femaleAnim.SetTrigger("FemaleWin");
+        winLevelAnim.SetTrigger("LevelWin");
         PlayerController.Instance.animator.SetTrigger("EndGame");
         PiecesManager.Instance.AddIndex();
         UpdateUI();

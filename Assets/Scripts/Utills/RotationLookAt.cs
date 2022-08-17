@@ -18,13 +18,4 @@ public class RotationLookAt : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime);
         }
     }
-
-    public Transform FindTarget()
-    {
-       var targetTransf = GameObject.Find("PFB_Piece_EndGame/EndGame/FemaleCharacter").GetComponent<Transform>();
-
-        target = targetTransf;
-
-        return target;
-    }
 }
