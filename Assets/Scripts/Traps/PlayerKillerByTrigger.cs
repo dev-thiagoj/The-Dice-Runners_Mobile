@@ -19,14 +19,8 @@ public class PlayerKillerByTrigger : MonoBehaviour
     {
         if (other.transform.CompareTag("Player"))
         {
-            //collider.enabled = false;
-            //if (PlayerController.Instance._isAlive == true) PlayerController.Instance.Dead();
-            if (PlayerController.Instance.isInvencible == false)
-            {
-                if (PlayerController.Instance._isAlive == true) PlayerController.Instance._isAlive = false;
-                PlaySFX();
-            }
-
+            if (PlayerController.Instance._isAlive == true) PlayerController.Instance._isAlive = false;
+            PlaySFX();
         }
     }
 

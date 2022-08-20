@@ -51,8 +51,8 @@ public class GameManager : Singleton<GameManager>
     public GameObject[] tutorialImages;
     public int _viewed = 0;
 
-    [Header("Female Animation")]
-    public Animator femaleAnim;
+    [Header("Win Level Animation")]
+    public Animator winLevelAnim;
 
     [Header("UI Level")]
     public TextMeshProUGUI showUILevel;
@@ -127,15 +127,14 @@ public class GameManager : Singleton<GameManager>
 
     void FindFemaleAnimInScene()
     {
-        femaleAnim = GameObject.Find("FemaleCharacter").GetComponent<Animator>();
+        InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter();
+        //femaleAnim = GameObject.Find("CharacterPos").GetComponentInChildren<Animator>();
     }
 
     public void StartRun()
     {
         SFXPool.Instance.CreatePool();
         _isGameStarted = true;
-        //cameraCanvas.SetActive(true);
-        //StartCoroutine(TutorialCoroutine());
         PlayerController.Instance.InvokeStartRun();
         RollDice.Instance.InvokeStartRoll();
         RollDice.Instance.CallDiceSFX();
@@ -187,7 +186,7 @@ public class GameManager : Singleton<GameManager>
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
-        femaleAnim.SetTrigger("FemaleWin");
+        winLevelAnim.SetTrigger("LevelWin");
         PlayerController.Instance.animator.SetTrigger("EndGame");
         PiecesManager.Instance.AddIndex();
         UpdateUI();
@@ -209,13 +208,13 @@ public class GameManager : Singleton<GameManager>
     public void RestartGame()
     {
         PlayerPrefs.SetInt("isRestart", 1);
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void GoToMenu()
     {
         PlayerPrefs.SetInt("isRestart", 0);
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void ExitApplication()

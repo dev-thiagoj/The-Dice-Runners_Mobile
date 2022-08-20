@@ -9,7 +9,6 @@ public class FirebaseInit : MonoBehaviour
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
             FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-
         });
     }
 }
