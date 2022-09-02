@@ -24,9 +24,9 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
         InstantiatePlayer();
     }
 
+    //escolher o player que será usado no jogo
     public void ChoosePlayer()
     {
-        //escolher o player que será usado no jogo
         foreach (var character in characters)
         {
             character.SetActive(false);
@@ -46,12 +46,11 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
     {
         //instanciar o player na cena
         characters[characterIndex].SetActive(true);
-        vcam.m_AnimatedTarget = characters[characterIndex].GetComponent<Animator>();
         PlayerController.Instance.characterController = GameObject.Find("=== PLAYER ===").GetComponentInChildren<CharacterController>();
-        PlayerController.Instance.animator = GameObject.Find("=== PLAYER ===").GetComponentInChildren<Animator>();
+        PlayerController.Instance.playerAnimation.FindAnimator();
+        vcam.m_AnimatedTarget = characters[characterIndex].GetComponent<Animator>();
         characterIndex++;
-        if (characterIndex == 2) characterIndex = 0;
-        //InstantiateEndLevelCharacter();
+        if (characterIndex == characters.Count) characterIndex = 0;
     }
 
     public void InstantiateEndLevelCharacter()

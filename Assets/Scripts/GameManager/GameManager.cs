@@ -187,7 +187,7 @@ public class GameManager : Singleton<GameManager>
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
         winLevelAnim.SetTrigger("LevelWin");
-        PlayerController.Instance.animator.SetTrigger("EndGame");
+        PlayerController.Instance.playerAnimation.SetTriggerByString("EndGame");
         PiecesManager.Instance.AddIndex();
         UpdateUI();
         Invoke(nameof(ShowLevelCompleteScreen), 5);

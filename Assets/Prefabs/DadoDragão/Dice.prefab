@@ -4908,7 +4908,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 3059476383818136753}
-  diceToRoll: {fileID: 0}
+  diceToRoll: {fileID: 2209960931327915353}
   audioSource: {fileID: 1636408417}
   particleSystem: {fileID: 5852772618086250914}
   speedRoll: 8

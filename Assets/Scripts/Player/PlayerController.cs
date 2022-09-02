@@ -1,23 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Singleton;
 using DG.Tweening;
 
-// TIRAR OS HARDCODES
-
-public class PlayerController : Singleton<PlayerController>
+public class PlayerController : Singleton<PlayerController> // <------- deixar de usar singleton e usar os actions
 {
     #region === VARIABLES ===
 
     public CharacterController characterController;
-    public Animator animator;
-    public AudioSource audioSource;
-    public List<AudioClip> sfxPlayer;
+    public PlayerAnimationManager playerAnimation;
+    public AudioSource audioSource; // <------------ srp
+    public List<AudioClip> sfxPlayer; // <----------- srp
 
     [Header("Inputs")]
-    public PlayerInputSystem playerInputs;
+    public PlayerInputSystem playerInputs; // <-------------- srp
 
     [Header("Movement")]
     public float runSpeed = 5;
@@ -36,14 +33,14 @@ public class PlayerController : Singleton<PlayerController>
     float distToGround;
     float spaceToGround = .3f;
 
-    [Header("Turbo PowerUp")]
+    [Header("Turbo PowerUp")] // <---------- srp
     public float turboSpeed;
     public int maxTurbos = 3;
     public int _currTurbo;
     public float turboTime = 2;
     bool _turboOn = false;
 
-    [Header("Magnetic Powerup")]
+    [Header("Magnetic Powerup")] // <------------------- srp
     public Transform magneticCollider;
     public ForceFieldManager forceField;
     public float magneticSize;
@@ -53,12 +50,12 @@ public class PlayerController : Singleton<PlayerController>
     [Header("Bounds")]
     private float range = 5.6f;
 
-    [Header("Expressions")]
+    [Header("Expressions")] // <-------------- srp
     public Transform[] expressions;
     public float animationDuration;
     public Ease ease;
 
-    [Header("Look At EndGame")]
+    [Header("Look At EndGame")] // <-------------------- srp
     public RotationLookAt rotationLook;
     public string targetName;
 
@@ -67,8 +64,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnValidate()
     {
-        //if (characterController == null) characterController = GetComponent<CharacterController>();
-        //if (animator == null) animator = GetComponentInChildren<Animator>();
+        if (playerAnimation == null) playerAnimation = GetComponent<PlayerAnimationManager>();
         if (audioSource == null) audioSource = GetComponentInChildren<AudioSource>();
         if (rotationLook == null) rotationLook = GetComponent<RotationLookAt>();
         if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
@@ -120,37 +116,28 @@ public class PlayerController : Singleton<PlayerController>
         {
             IsGrounded();
             Movement();
-            //if (IsGrounded()) Jump();
             Bounds();
-            if (IsGrounded()) Inputs();
         }
 
-        if (_isAlive == false && IsGrounded()) Dead();
-        if (!canRun) animator.SetTrigger("Idle");
-        if (canRun && IsGrounded()) animator.SetTrigger("Run");
+        if (!canRun) playerAnimation.SetTriggerByString("Idle");
+        if (canRun && IsGrounded()) playerAnimation.SetTriggerByString("Run");
+        if (!_isAlive && IsGrounded()) Dead();
     }
 
-    public void Inputs()
-    {
-        if (Input.GetKeyUp(KeyCode.S) && !_turboOn) TurboPlayer();
-        if (Input.GetKey(KeyCode.W)) Walk();
-        if (Input.GetKeyUp(KeyCode.W)) BackRun();
-    }
-
-    void FindLookAtTarget()
+    void FindLookAtTarget() // <------------------ Criar classe específica de procurar objetos na cena
     {
         rotationLook.target = GameObject.Find("CharacterPos").GetComponent<Transform>();
     }
 
     #region === MOVEMENTS ===
 
-    public void InvokeStartRun()
+    public void InvokeStartRun() // <----------- resolver com actions
     {
         Invoke(nameof(StartRun), 5);
         Invoke(nameof(StartExpressionsCoroutine), 4);
     }
 
-    public void StartExpressionsCoroutine()
+    public void StartExpressionsCoroutine() // <---------------- criar classe
     {
         StartCoroutine(ExpressionsCoroutine(0));
     }
@@ -179,47 +166,18 @@ public class PlayerController : Singleton<PlayerController>
         {
             _vSpeed = _currJumpForce;
             _currSideSpeed = 0;
-            animator.SetTrigger("Jump");
+            playerAnimation.SetTriggerByString("Jump");
             SFXPool.Instance.Play(SFXType.JUMP_02);
             Invoke(nameof(BackRun), 2);
         }
     }
-
-    // Old Input System
-    /*public void Move()
-    {
-        if (isInvencible) _currRunSpeed = 6;
-
-        var move = new Vector3((Input.GetAxis("Horizontal")) * -_currSideSpeed, 0, _currRunSpeed);
-        _vSpeed -= gravity * Time.deltaTime;
-        move.y = _vSpeed;
-
-        characterController.Move(move * Time.deltaTime);
-    }
-
-    public void Jump()
-    {
-        if (characterController.isGrounded)
-        {
-            _vSpeed = 0;
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                _vSpeed = _currJumpForce;
-                _currSideSpeed = 0;
-                animator.SetTrigger("Jump");
-                SFXPool.Instance.Play(SFXType.JUMP_02);
-                Invoke(nameof(BackRun), 2);
-            }
-        }
-    }*/
 
     public void Walk()
     {
         _currRunSpeed = walkSpeed;
         _currSideSpeed = walkSpeed;
         _currJumpForce = 0;
-        animator.speed = .5f;
+        playerAnimation.SetAnimationSpeed(.5f);
     }
 
     public void BackRun()
@@ -227,7 +185,7 @@ public class PlayerController : Singleton<PlayerController>
         _currRunSpeed = runSpeed;
         _currSideSpeed = sideSpeed;
         _currJumpForce = jumpForce;
-        animator.speed = 1;
+        playerAnimation.SetAnimationSpeed(1);
     }
     bool IsGrounded()
     {
@@ -262,16 +220,8 @@ public class PlayerController : Singleton<PlayerController>
     public void OnDead()
     {
         SFXPool.Instance.Play(SFXType.DEATH_03);
-        animator.SetTrigger("Die");
-        //if(IsGrounded()) animator.SetTrigger("Die");
+        playerAnimation.SetTriggerByString("Die");
         Invoke(nameof(ShowEndGameScreen), 5);
-    }
-
-    public void DieOnGround()
-    {
-        if (_isAlive == false && IsGrounded())
-        {
-        }
     }
 
     public void ShowEndGameScreen()
