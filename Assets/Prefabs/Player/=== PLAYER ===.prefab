@@ -13109,6 +13109,8 @@ GameObject:
   - component: {fileID: 4635048232044946286}
   - component: {fileID: 776501026829666494}
   - component: {fileID: 1548772739924966175}
+  - component: {fileID: 1602650923}
+  - component: {fileID: 613481981719034888}
   m_Layer: 0
   m_Name: === PLAYER ===
   m_TagString: Player
@@ -13171,9 +13173,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 6455832437459686619}
-  animator: {fileID: 4412175023681893897}
-  audioSource: {fileID: 1548772739924966175}
-  sfxPlayer: []
+  playerAnimation: {fileID: 1602650923}
+  playerPopUp: {fileID: 613481981719034888}
   runSpeed: 5
   sideSpeed: 5
   walkSpeed: 1
@@ -13189,14 +13190,8 @@ MonoBehaviour:
   magneticSize: 5
   magneticTime: 5
   _hasMagnetic: 0
-  expressions:
-  - {fileID: 744587943852872111}
-  - {fileID: 3802105770029245778}
-  animationDuration: 1
-  ease: 27
   rotationLook: {fileID: 776501026829666494}
   targetName: 
-  _isAlive: 1
 --- !u!114 &776501026829666494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13307,6 +13302,36 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1602650923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635048232044946284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b76791a280a9c4b4a855b6f8dbfce069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+--- !u!114 &613481981719034888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635048232044946284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9ac03a13a7ce94d8d937b95ad201b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popUps:
+  - {fileID: 744587943852872111}
+  - {fileID: 3802105770029245778}
+  duration: 1
+  ease: 27
 --- !u!1 &4774614948955735996
 GameObject:
   m_ObjectHideFlags: 0

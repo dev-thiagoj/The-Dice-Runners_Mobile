@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Singleton;
 using DG.Tweening;
@@ -10,11 +9,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
 
     public CharacterController characterController;
     public PlayerAnimationManager playerAnimation;
-    public AudioSource audioSource; // <------------ srp
-    public List<AudioClip> sfxPlayer; // <----------- srp
-
-    [Header("Inputs")]
-    public PlayerInputSystem playerInputs; // <-------------- srp
+    public PlayerPopUpManager playerPopUp;
 
     [Header("Movement")]
     public float runSpeed = 5;
@@ -50,22 +45,18 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     [Header("Bounds")]
     private float range = 5.6f;
 
-    [Header("Expressions")] // <-------------- srp
-    public Transform[] expressions;
-    public float animationDuration;
-    public Ease ease;
-
     [Header("Look At EndGame")] // <-------------------- srp
     public RotationLookAt rotationLook;
     public string targetName;
 
-    public bool _isAlive = true;
+    private PlayerInputSystem _playerInputs;
+    private bool _isAlive = true;
     #endregion
 
     private void OnValidate()
     {
         if (playerAnimation == null) playerAnimation = GetComponent<PlayerAnimationManager>();
-        if (audioSource == null) audioSource = GetComponentInChildren<AudioSource>();
+        if (playerPopUp == null) playerPopUp = GetComponent<PlayerPopUpManager>();
         if (rotationLook == null) rotationLook = GetComponent<RotationLookAt>();
         if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
     }
@@ -74,13 +65,13 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
 
     private void OnEnable()
     {
-        playerInputs.Enable();
+        _playerInputs.Enable();
         Actions.findFemaleAnim += FindLookAtTarget;
     }
 
     private void OnDisable()
     {
-        playerInputs.Disable();
+        _playerInputs.Disable();
         Actions.findFemaleAnim -= FindLookAtTarget;
     }
 
@@ -90,13 +81,13 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         base.Awake();
 
-        playerInputs = new PlayerInputSystem();
+        _playerInputs = new PlayerInputSystem();
 
-        playerInputs.Gameplay.Jump.performed += ctx => Jump();
-        playerInputs.Gameplay.Turbo.performed += ctx => TurboPlayer();
+        _playerInputs.Gameplay.Jump.performed += ctx => Jump();
+        _playerInputs.Gameplay.Turbo.performed += ctx => TurboPlayer();
 
-        playerInputs.Gameplay.Stop.performed += ctx => Walk();
-        playerInputs.Gameplay.Stop.canceled += ctx => BackRun();
+        _playerInputs.Gameplay.Stop.performed += ctx => Walk();
+        _playerInputs.Gameplay.Stop.canceled += ctx => BackRun();
 
     }
 
@@ -134,12 +125,12 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     public void InvokeStartRun() // <----------- resolver com actions
     {
         Invoke(nameof(StartRun), 5);
-        Invoke(nameof(StartExpressionsCoroutine), 4);
+        Invoke(nameof(StartExpressions), 4);
     }
 
-    public void StartExpressionsCoroutine() // <---------------- criar classe
+    public void StartExpressions()
     {
-        StartCoroutine(ExpressionsCoroutine(0));
+        playerPopUp.CallExpression(0); // <----- tirar hardcode criando um enum no playerpopupmanager
     }
 
     public void StartRun()
@@ -151,7 +142,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     // New Input System _ Mobile
     public void Movement()
     {
-        Vector2 movement = playerInputs.Gameplay.Move.ReadValue<Vector2>();
+        Vector2 movement = _playerInputs.Gameplay.Move.ReadValue<Vector2>();
         Vector3 move = new Vector3((movement.x * -_currSideSpeed), 0, _currRunSpeed);
 
         _vSpeed -= gravity * Time.deltaTime;
@@ -210,11 +201,14 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     #region === HEALTH ===
     public void Dead()
     {
-        _isAlive = true;
-        canRun = false;
-        characterController.detectCollisions = false;
-        StartCoroutine(ExpressionsCoroutine(1));
-        OnDead();
+        if (_isAlive)
+        {
+            _isAlive = false;
+            canRun = false;
+            characterController.detectCollisions = false;
+            playerPopUp.CallExpression(1); // <--------- criar um action que chama todos os efeitos de morte?
+            OnDead();
+        }
     }
 
     public void OnDead()
@@ -276,15 +270,5 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         MagneticOn(false);
         StopCoroutine(MagneticCoroutine());
     }
-    #endregion
-
-    #region === EXPRESSIONS ===
-
-    public IEnumerator ExpressionsCoroutine(int index)
-    {
-        expressions[index].transform.DOScale(0.5f, animationDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
-        yield return new WaitForEndOfFrame();
-    }
-
     #endregion
 }
