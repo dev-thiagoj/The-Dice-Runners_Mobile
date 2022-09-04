@@ -65,6 +65,7 @@ public class GameManager : Singleton<GameManager>
     {
         Actions.startTutorial += StartTutorialCoroutine;
         Actions.findFemaleAnim += FindFemaleAnimInScene;
+        Actions.onFinishLine += ReachedFinishLine;
     }
 
     private void OnDisable()
@@ -129,6 +130,12 @@ public class GameManager : Singleton<GameManager>
     {
         InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter();
         //femaleAnim = GameObject.Find("CharacterPos").GetComponentInChildren<Animator>();
+    }
+
+    void ReachedFinishLine()
+    {
+        checkedEndLine = true;
+        LevelComplete();
     }
 
     public void StartRun()

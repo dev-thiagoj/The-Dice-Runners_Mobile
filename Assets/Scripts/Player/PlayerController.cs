@@ -45,10 +45,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     [Header("Bounds")]
     private float range = 5.6f;
 
-    [Header("Look At EndGame")] // <-------------------- srp
-    public RotationLookAt rotationLook;
-    public string targetName;
-
     private PlayerInputSystem _playerInputs;
     private bool _isAlive = true;
     #endregion
@@ -57,7 +53,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         if (playerAnimation == null) playerAnimation = GetComponent<PlayerAnimationManager>();
         if (playerPopUp == null) playerPopUp = GetComponent<PlayerPopUpManager>();
-        if (rotationLook == null) rotationLook = GetComponent<RotationLookAt>();
         if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
     }
 
@@ -66,13 +61,11 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     private void OnEnable()
     {
         _playerInputs.Enable();
-        Actions.findFemaleAnim += FindLookAtTarget;
     }
 
     private void OnDisable()
     {
         _playerInputs.Disable();
-        Actions.findFemaleAnim -= FindLookAtTarget;
     }
 
     #endregion
@@ -113,11 +106,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         if (!canRun) playerAnimation.SetTriggerByString("Idle");
         if (canRun && IsGrounded()) playerAnimation.SetTriggerByString("Run");
         if (!_isAlive && IsGrounded()) Dead();
-    }
-
-    void FindLookAtTarget() // <------------------ Criar classe específica de procurar objetos na cena
-    {
-        rotationLook.target = GameObject.Find("CharacterPos").GetComponent<Transform>();
     }
 
     #region === MOVEMENTS ===
