@@ -10,6 +10,7 @@ public class LoadPrefs : MonoBehaviour
     public AudioSource musicSource;
     public Slider volumeSlider;
     public TextMeshProUGUI sliderValue;
+    public InstantiatePlayerHelper instantiatePlayer;
 
     private void Awake()
     {
@@ -20,13 +21,6 @@ public class LoadPrefs : MonoBehaviour
             sliderValue.text = localVolume.ToString("0.0");
             volumeSlider.value = localVolume;
             musicSource.volume = localVolume;
-        }
-
-        if (PlayerPrefs.HasKey("viewedTutorial"))
-        {
-            int localValue = PlayerPrefs.GetInt("viewedTutorial");
-
-            GameManager.Instance._viewed = localValue;
         }
 
         if (PlayerPrefs.HasKey("isRestart"))
@@ -62,6 +56,13 @@ public class LoadPrefs : MonoBehaviour
             int localIndex = PlayerPrefs.GetInt("pieceIndex");
 
             PiecesManager.Instance._index = localIndex;
+        }
+
+        if (PlayerPrefs.HasKey("currPlayerIndex"))
+        {
+            int index = PlayerPrefs.GetInt("currPlayerIndex");
+
+            instantiatePlayer.characterIndex = index;
         }
     }
 }

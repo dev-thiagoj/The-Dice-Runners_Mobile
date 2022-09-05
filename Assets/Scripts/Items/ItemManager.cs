@@ -21,7 +21,7 @@ public class ItemManager : Singleton<ItemManager>
     private void Start()
     {
         dice = 0;
-        turbo = PlayerController.Instance.maxTurbos;
+        turbo = GameObject.Find("=== PLAYER ===").GetComponent<Turbo_PowerUp>().turbosAmount;
     }
 
     private void Update()

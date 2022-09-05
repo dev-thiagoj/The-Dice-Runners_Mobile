@@ -8,7 +8,7 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
     public List<GameObject> characters;
     public List<GameObject> endLevelCharacters;
     public GameObject currEndCharacter;
-    public int characterIndex = 0;
+    public int characterIndex;
     public GameObject endLevelCharacterPos;
     public Cinemachine.CinemachineStateDrivenCamera vcam;
 
@@ -19,8 +19,12 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
 
     private void Start()
     {
-        ChoosePlayer();
-        characterIndex = 0;
+        if (!PlayerPrefs.HasKey("currPlayerIndex"))
+        {
+            ChoosePlayer();
+            characterIndex = 0;
+        }
+
         InstantiatePlayer();
     }
 
@@ -49,19 +53,20 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
         PlayerController.Instance.characterController = GameObject.Find("=== PLAYER ===").GetComponentInChildren<CharacterController>();
         PlayerController.Instance.playerAnimation.FindAnimator();
         vcam.m_AnimatedTarget = characters[characterIndex].GetComponent<Animator>();
+        PlayerPrefs.SetInt("currPlayerIndex", characterIndex);
         characterIndex++;
-        if (characterIndex == characters.Count) characterIndex = 0;
+        if (characterIndex == 2) characterIndex = 0;
     }
 
     public void InstantiateEndLevelCharacter()
     {
-        if(currEndCharacter != null) Destroy(currEndCharacter);
-        endLevelCharacterPos = GameObject.Find("CharacterPos");
-        
+        if (currEndCharacter != null) Destroy(currEndCharacter);
+
         //instanciar oq não foi escolhido para ficar no fim do level
+        endLevelCharacterPos = GameObject.Find("CharacterPos");
         currEndCharacter = Instantiate(endLevelCharacters[characterIndex], endLevelCharacterPos.transform);
         currEndCharacter.transform.position = endLevelCharacterPos.transform.position;
         currEndCharacter.gameObject.SetActive(true);
         GameManager.Instance.winLevelAnim = currEndCharacter.GetComponent<Animator>();
-    } 
+    }
 }

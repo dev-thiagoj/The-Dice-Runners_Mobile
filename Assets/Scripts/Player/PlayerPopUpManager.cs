@@ -2,21 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
+
+public enum ExpressionType
+{
+    SURPRISE,
+    DEATH
+}
+
+[Serializable]
+public class ExpressionSetup
+{
+    public ExpressionType expressionType;
+    public Transform expressionGO;
+}
 
 public class PlayerPopUpManager : MonoBehaviour
 {
-    public Transform[] popUps;
-    public float duration;
-    public Ease ease;
+    [SerializeField] float endSize;
+    [SerializeField] float duration;
+    [SerializeField] Ease ease;
+    [SerializeField] List<ExpressionSetup> expressionsSetup;
 
-    public void CallExpression(int index)
+    public void CallExpression(ExpressionType type)
     {
-        StartCoroutine(ExpressionsCoroutine(index));
+        Transform obj = GetExpressionByType(type).expressionGO;
+
+        StartCoroutine(ExpressionsCoroutine(obj));
     }
 
-    public IEnumerator ExpressionsCoroutine(int index)
+    ExpressionSetup GetExpressionByType(ExpressionType expressionType)
     {
-        popUps[index].transform.DOScale(0.5f, duration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
+        return expressionsSetup.Find(i => i.expressionType == expressionType);
+    }
+
+    IEnumerator ExpressionsCoroutine(Transform obj)
+    {
+        obj.DOScale(endSize, duration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
         yield return new WaitForEndOfFrame();
     }
 }

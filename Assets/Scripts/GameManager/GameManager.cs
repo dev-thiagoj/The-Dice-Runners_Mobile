@@ -63,15 +63,13 @@ public class GameManager : Singleton<GameManager>
 
     private void OnEnable()
     {
-        Actions.startTutorial += StartTutorialCoroutine;
-        Actions.findFemaleAnim += FindFemaleAnimInScene;
+        Actions.findEndLevelAnim += FindEndAnimInScene;
         Actions.onFinishLine += ReachedFinishLine;
     }
 
     private void OnDisable()
     {
-        Actions.startTutorial -= StartTutorialCoroutine;
-        Actions.findFemaleAnim -= FindFemaleAnimInScene;
+        //Actions.findEndLevelAnim -= FindEndAnimInScene;
     }
 
     protected override void Awake()
@@ -106,10 +104,12 @@ public class GameManager : Singleton<GameManager>
 
     public void ActiveCollectablesCount()
     {
+        int turbos = GameObject.Find("=== PLAYER ===").GetComponent<Turbo_PowerUp>().turbosAmount;
+
         activeDices = FindObjectsOfType(typeof(ItemCollectableCoin)).Length;
         activeTurbos = FindObjectsOfType(typeof(ItemCollectableTurbo)).Length;
 
-        maxPossibleScore = activeDices * (activeTurbos + PlayerController.Instance.maxTurbos);
+        maxPossibleScore = activeDices * (activeTurbos + turbos);
         showUILevel.text = "Level " + LevelManager.Instance.level;
     }
 
@@ -126,10 +126,9 @@ public class GameManager : Singleton<GameManager>
         btnContainer.transform.DOScale(0, timeBtnAnim).SetEase(ease).From();
     }
 
-    void FindFemaleAnimInScene()
+    void FindEndAnimInScene()
     {
         InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter();
-        //femaleAnim = GameObject.Find("CharacterPos").GetComponentInChildren<Animator>();
     }
 
     void ReachedFinishLine()
@@ -193,7 +192,6 @@ public class GameManager : Singleton<GameManager>
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
-        winLevelAnim.SetTrigger("LevelWin");
         PlayerController.Instance.playerAnimation.SetTriggerByString("EndGame");
         PiecesManager.Instance.AddIndex();
         UpdateUI();
@@ -226,7 +224,6 @@ public class GameManager : Singleton<GameManager>
 
     public void ExitApplication()
     {
-        PlayerPrefs.SetInt("viewedTutorial", 0);
         PlayerPrefs.SetInt("isRestart", 0);
         Application.Quit();
     }
@@ -235,7 +232,6 @@ public class GameManager : Singleton<GameManager>
     {
         TurnTurboInPoints();
         totalScore = ItemManager.Instance.dice * turboScore;
-        //if (checkedEndLine) totalScore += 300;
         SaveMaxScore();
         StarsCalculate();
         scoreText.text = "Score: " + totalScore.ToString("000");
@@ -285,25 +281,5 @@ public class GameManager : Singleton<GameManager>
                 star.SetActive(true);
             }
         }
-    }
-
-    public void StartTutorialCoroutine()
-    {
-        if (_viewed == 0) StartCoroutine(TutorialCoroutine());
-        else return;
-    }
-
-    public IEnumerator TutorialCoroutine()
-    {
-        for (int i = 0; i < tutorialImages.Length; i++)
-        {
-            tutorialImages[i].SetActive(true);
-            yield return new WaitForSeconds(3);
-            tutorialImages[i].SetActive(false);
-            yield return new WaitForSeconds(1);
-        }
-
-        _viewed = 1;
-        PlayerPrefs.SetInt("viewedTutorial", 1);
     }
 }

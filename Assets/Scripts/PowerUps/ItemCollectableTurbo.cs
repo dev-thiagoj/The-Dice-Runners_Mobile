@@ -9,6 +9,13 @@ public class ItemCollectableTurbo : ItemCollectableBase
     public float lerpSpeed = 5;
     public float minDistance = 1f;
 
+    Turbo_PowerUp powerUp;
+
+    private void Start()
+    {
+        powerUp = GameObject.Find("=== Player ===").GetComponent<Turbo_PowerUp>();
+    }
+
     protected override void Collect()
     {
         OnCollect();
@@ -21,7 +28,7 @@ public class ItemCollectableTurbo : ItemCollectableBase
         SFXPool.Instance.Play(SFXType.TURBO_COLLECT_05);
         collect = true;
         ItemManager.Instance.AddTurbo();
-        PlayerController.Instance._currTurbo--;
+        powerUp.TurboCollect();
     }
 
     private void Update()

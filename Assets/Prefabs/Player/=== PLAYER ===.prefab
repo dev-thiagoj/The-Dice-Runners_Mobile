@@ -13111,6 +13111,7 @@ GameObject:
   - component: {fileID: 1548772739924966175}
   - component: {fileID: 1602650923}
   - component: {fileID: 613481981719034888}
+  - component: {fileID: 7339048029854370933}
   m_Layer: 0
   m_Name: === PLAYER ===
   m_TagString: Player
@@ -13172,26 +13173,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffaeafe6fa058064284e7a4652d4c2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 6455832437459686619}
+  characterController: {fileID: 0}
   playerAnimation: {fileID: 1602650923}
   playerPopUp: {fileID: 613481981719034888}
   runSpeed: 5
   sideSpeed: 5
+  currRunSpeed: 0
   walkSpeed: 1
   canRun: 0
   jumpForce: 8
   gravity: 9.8
-  turboSpeed: 20
-  maxTurbos: 2
-  _currTurbo: 0
-  turboTime: 0.5
   magneticCollider: {fileID: 8896210892898174823}
   forceField: {fileID: 1548772738583100634}
   magneticSize: 5
   magneticTime: 5
   _hasMagnetic: 0
-  rotationLook: {fileID: 776501026829666494}
-  targetName: 
 --- !u!114 &776501026829666494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13204,8 +13200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab516f2a18da33f459259ed9beb51e82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canLook: 0
-  target: {fileID: 0}
+  _canLook: 0
 --- !u!82 &1548772739924966175
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13314,7 +13309,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b76791a280a9c4b4a855b6f8dbfce069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
 --- !u!114 &613481981719034888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13327,11 +13321,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9ac03a13a7ce94d8d937b95ad201b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popUps:
-  - {fileID: 744587943852872111}
-  - {fileID: 3802105770029245778}
+  endSize: 0
   duration: 1
   ease: 27
+  expressionsSetup: []
+--- !u!114 &7339048029854370933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635048232044946284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc6c9f6936c3e014b9a886240a13b78a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turboSpeed: 10
+  turbosAmount: 3
+  currTurbo: 0
+  turboDuration: 2
 --- !u!1 &4774614948955735996
 GameObject:
   m_ObjectHideFlags: 0

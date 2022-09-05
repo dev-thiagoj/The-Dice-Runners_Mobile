@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class PlayerAnimationManager : MonoBehaviour
 {
-    public Animator animator;
+    Animator animator;
 
     [Header("Look At EndGame")]
-    public RotationLookAt rotationLook;
+    RotationLookAt rotationLook;
 
     private void OnValidate()
     {
@@ -14,13 +14,14 @@ public class PlayerAnimationManager : MonoBehaviour
 
     private void Awake()
     {
-        Actions.findFemaleAnim += FindLookAtTarget;
+        Actions.findEndLevelAnim += FindTargetToLookAtInTheEnd;
         Actions.onFinishLine += ReachedFinishLine;
     }
 
-    void FindLookAtTarget()
+    // Achar a posição do personagem do final do level
+    void FindTargetToLookAtInTheEnd()
     {
-        rotationLook.target = GameObject.Find("CharacterPos").GetComponent<Transform>();
+        rotationLook.FindPlayerTarget();
     }
 
     // Achar o animator que será usado após a escolha do personagem

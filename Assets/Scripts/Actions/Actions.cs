@@ -5,7 +5,6 @@ using System;
 
 public static class Actions
 {
-    public static Action startTutorial;
-    public static Action findFemaleAnim;
+    public static Action findEndLevelAnim;
     public static Action onFinishLine;
 }

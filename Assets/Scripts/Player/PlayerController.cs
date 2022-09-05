@@ -14,26 +14,26 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     [Header("Movement")]
     public float runSpeed = 5;
     public float sideSpeed = 5;
-    float _currRunSpeed;
+    public float currRunSpeed;
     float _currSideSpeed;
     [Range(1, 4)]
     public float walkSpeed = 3;
     public bool canRun = false;
 
     [Header("Jump")]
+    [SerializeField] float jumpForce = 8;
+    [SerializeField] public float gravity = 9.8f;
     float _vSpeed;
-    public float jumpForce = 8;
     float _currJumpForce;
-    public float gravity = 9.8f;
     float distToGround;
     float spaceToGround = .3f;
 
     [Header("Turbo PowerUp")] // <---------- srp
-    public float turboSpeed;
-    public int maxTurbos = 3;
-    public int _currTurbo;
-    public float turboTime = 2;
-    bool _turboOn = false;
+    //public float turboSpeed;
+    //public int maxTurbos = 3;
+    //public int _currTurbo;
+    //public float turboTime = 2;
+    //bool _turboOn = false;
 
     [Header("Magnetic Powerup")] // <------------------- srp
     public Transform magneticCollider;
@@ -45,7 +45,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     [Header("Bounds")]
     private float range = 5.6f;
 
-    private PlayerInputSystem _playerInputs;
+    internal PlayerInputSystem _playerInputs;
     private bool _isAlive = true;
     #endregion
 
@@ -77,20 +77,16 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         _playerInputs = new PlayerInputSystem();
 
         _playerInputs.Gameplay.Jump.performed += ctx => Jump();
-        _playerInputs.Gameplay.Turbo.performed += ctx => TurboPlayer();
-
         _playerInputs.Gameplay.Stop.performed += ctx => Walk();
         _playerInputs.Gameplay.Stop.canceled += ctx => BackRun();
-
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
-        _currRunSpeed = runSpeed;
+        currRunSpeed = runSpeed;
         _currSideSpeed = sideSpeed;
         _currJumpForce = jumpForce;
-        _currTurbo = 0;
     }
 
     // Update is called once per frame
@@ -118,20 +114,19 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
 
     public void StartExpressions()
     {
-        playerPopUp.CallExpression(0); // <----- tirar hardcode criando um enum no playerpopupmanager
+        playerPopUp.CallExpression(ExpressionType.SURPRISE);
     }
 
     public void StartRun()
     {
         canRun = true;
-        //Actions.startTutorial();
     }
 
     // New Input System _ Mobile
     public void Movement()
     {
         Vector2 movement = _playerInputs.Gameplay.Move.ReadValue<Vector2>();
-        Vector3 move = new Vector3((movement.x * -_currSideSpeed), 0, _currRunSpeed);
+        Vector3 move = new Vector3((movement.x * -_currSideSpeed), 0, currRunSpeed);
 
         _vSpeed -= gravity * Time.deltaTime;
         move.y = _vSpeed;
@@ -153,7 +148,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
 
     public void Walk()
     {
-        _currRunSpeed = walkSpeed;
+        currRunSpeed = walkSpeed;
         _currSideSpeed = walkSpeed;
         _currJumpForce = 0;
         playerAnimation.SetAnimationSpeed(.5f);
@@ -161,7 +156,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
 
     public void BackRun()
     {
-        _currRunSpeed = runSpeed;
+        currRunSpeed = runSpeed;
         _currSideSpeed = sideSpeed;
         _currJumpForce = jumpForce;
         playerAnimation.SetAnimationSpeed(1);
@@ -194,7 +189,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
             _isAlive = false;
             canRun = false;
             characterController.detectCollisions = false;
-            playerPopUp.CallExpression(1); // <--------- criar um action que chama todos os efeitos de morte?
+            playerPopUp.CallExpression(ExpressionType.DEATH); // <--------- criar um action que chama todos os efeitos de morte?
             OnDead();
         }
     }
@@ -213,7 +208,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     #endregion
 
     #region === POWERUPS ===
-    public void TurboPlayer()
+    /*public void TurboPlayer()
     {
         if (_currTurbo < maxTurbos && characterController.isGrounded)
         {
@@ -237,7 +232,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         _currRunSpeed = runSpeed;
         _turboOn = false;
         StopCoroutine(TurboCoroutine());
-    }
+    }*/
 
     public void MagneticOn(bool b = false)
     {
