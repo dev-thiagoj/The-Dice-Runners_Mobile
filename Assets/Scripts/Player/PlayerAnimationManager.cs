@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerAnimationManager : MonoBehaviour
 {
-    Animator animator;
+    public Animator animator;
 
     [Header("Look At EndGame")]
     RotationLookAt rotationLook;
@@ -12,10 +12,16 @@ public class PlayerAnimationManager : MonoBehaviour
         if (rotationLook == null) rotationLook = GetComponent<RotationLookAt>();
     }
 
-    private void Awake()
+    private void OnEnable()
     {
         Actions.findEndLevelAnim += FindTargetToLookAtInTheEnd;
         Actions.onFinishLine += ReachedFinishLine;
+    }
+
+    private void OnDisable()
+    {
+        Actions.findEndLevelAnim -= FindTargetToLookAtInTheEnd;
+        Actions.onFinishLine -= ReachedFinishLine;
     }
 
     // Achar a posição do personagem do final do level

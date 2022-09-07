@@ -5,15 +5,9 @@ using UnityEngine;
 public class PlayerKillerByTrigger : MonoBehaviour
 {
     public AudioSource audioSource;
-    //public Collider collider;
 
     [Range(0, 1)]
     public float sfxVolume;
-
-    private void OnValidate()
-    {
-        //collider = GetComponent<Collider>();
-    }
 
     private void OnTriggerEnter(Collider other)
     {

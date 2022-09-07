@@ -12531,7 +12531,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4229311829818917715
 Transform:
   m_ObjectHideFlags: 0
@@ -13112,6 +13112,7 @@ GameObject:
   - component: {fileID: 1602650923}
   - component: {fileID: 613481981719034888}
   - component: {fileID: 7339048029854370933}
+  - component: {fileID: 4826130788763507155}
   m_Layer: 0
   m_Name: === PLAYER ===
   m_TagString: Player
@@ -13183,11 +13184,6 @@ MonoBehaviour:
   canRun: 0
   jumpForce: 8
   gravity: 9.8
-  magneticCollider: {fileID: 8896210892898174823}
-  forceField: {fileID: 1548772738583100634}
-  magneticSize: 5
-  magneticTime: 5
-  _hasMagnetic: 0
 --- !u!114 &776501026829666494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13309,6 +13305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b76791a280a9c4b4a855b6f8dbfce069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
 --- !u!114 &613481981719034888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13321,10 +13318,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9ac03a13a7ce94d8d937b95ad201b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endSize: 0
+  endSize: 0.5
   duration: 1
   ease: 27
-  expressionsSetup: []
+  expressionsSetup:
+  - expressionType: 0
+    expressionGO: {fileID: 744587943852872111}
+  - expressionType: 1
+    expressionGO: {fileID: 3802105770029245778}
 --- !u!114 &7339048029854370933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13341,6 +13342,27 @@ MonoBehaviour:
   turbosAmount: 3
   currTurbo: 0
   turboDuration: 2
+--- !u!114 &4826130788763507155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635048232044946284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 155321c4b99ebd442828f8fcb4b40c49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magneticTrigger: {fileID: 8896210892898174823}
+  forceField: {fileID: 1548772738583100634}
+  player: {fileID: 4635048232044946286}
+  magneticValue: 0
+  magneticSize: 5
+  magneticTime: 5
+  _inUse: 0
+  playerParticleSystem: {fileID: 8387140995125758761}
+  UIParticleSystem: {fileID: 0}
 --- !u!1 &4774614948955735996
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,7 +28,6 @@ public class GameManager : Singleton<GameManager>
     public int finalScore;
     public int turboScore;
     public int maxScore;
-    public bool checkedEndLine = false;
 
     [Header("Final Stars")]
     int activeDices;
@@ -64,12 +63,13 @@ public class GameManager : Singleton<GameManager>
     private void OnEnable()
     {
         Actions.findEndLevelAnim += FindEndAnimInScene;
-        Actions.onFinishLine += ReachedFinishLine;
+        Actions.onFinishLine += LevelComplete;
     }
 
     private void OnDisable()
     {
-        //Actions.findEndLevelAnim -= FindEndAnimInScene;
+        Actions.findEndLevelAnim -= FindEndAnimInScene;
+        Actions.onFinishLine -= LevelComplete;
     }
 
     protected override void Awake()
@@ -82,7 +82,7 @@ public class GameManager : Singleton<GameManager>
     {
         Time.timeScale = 1;
         //cameraCanvas.SetActive(false);
-        uiContainer.SetActive(false);
+        uiContainer.SetActive(false); // <---------- Fazer serem filhos do mesmo GO (ui, jiystick e minimap).
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
 
@@ -128,23 +128,23 @@ public class GameManager : Singleton<GameManager>
 
     void FindEndAnimInScene()
     {
-        InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter();
+        InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter(); // <------- melhorar esse pra não ter de instanciar
     }
 
     void ReachedFinishLine()
     {
-        checkedEndLine = true;
-        LevelComplete();
+        LevelComplete(); // <------- desnecessario, puxar o level complete direto do action
     }
 
     public void StartRun()
     {
         SFXPool.Instance.CreatePool();
         _isGameStarted = true;
-        PlayerController.Instance.InvokeStartRun();
-        RollDice.Instance.InvokeStartRoll();
+        PlayerController.Instance.InvokeStartRun(); // <=-------- refatorar para um action
+        RollDice.Instance.InvokeStartRoll(); // <--------- refatorar as chamadas do dado
         RollDice.Instance.CallDiceSFX();
         Cursor.visible = false;
+        //Cursor.visible = !Cursor.visible; <----------teste p/ implementar
         Invoke(nameof(ShowInGameUI), 6);
     }
 
@@ -179,7 +179,7 @@ public class GameManager : Singleton<GameManager>
 
     public void EndGame()
     {
-        PlayerController.Instance.canRun = false;
+        //PlayerController.Instance.canRun = false;
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
@@ -188,7 +188,6 @@ public class GameManager : Singleton<GameManager>
 
     public void LevelComplete()
     {
-        PlayerController.Instance.canRun = false;
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);

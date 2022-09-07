@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,9 @@ public class ItemCollectableMagnetic : ItemCollectableBase
     [Header("Player Particle Field")]
     [SerializeField] ForceFieldManager forceField;
 
+    [Header("Actions")]
+    public static Action onMagneticCollect;
+
     private void OnValidate()
     {
         if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
@@ -19,6 +23,7 @@ public class ItemCollectableMagnetic : ItemCollectableBase
 
     protected override void Collect()
     {
+        onMagneticCollect.Invoke();
         OnCollect();
     }
 
@@ -27,7 +32,7 @@ public class ItemCollectableMagnetic : ItemCollectableBase
         base.OnCollect();
         collider.enabled = false;
         collect = true;
-        PlayerController.Instance.MagneticOn(true);
+        //PlayerController.Instance.MagneticOn(true);
         forceField.StartParticleField();
     }
 

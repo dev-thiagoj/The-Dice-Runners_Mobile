@@ -64,5 +64,13 @@ public class LoadPrefs : MonoBehaviour
 
             instantiatePlayer.characterIndex = index;
         }
+
+        if (PlayerPrefs.HasKey("magneticsValue"))
+        {
+            int value = PlayerPrefs.GetInt("magneticsValue");
+            var target = GameObject.Find("=== PLAYER ===").GetComponent<Magnetic_PowerUp>();
+
+            target.magneticValue = value;
+        }
     }
 }

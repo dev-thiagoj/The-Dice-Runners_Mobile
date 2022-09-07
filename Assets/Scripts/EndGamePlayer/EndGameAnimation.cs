@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EndGameAnimation : MonoBehaviour
 {
     Animator animator;
 
-    private void Start()
-    {
-        Actions.onFinishLine += GetAnimatorInScene;
-    }
+    private void OnEnable() { Actions.onFinishLine += GetAnimatorInScene; }
+
+    private void OnDisable() { Actions.onFinishLine -= GetAnimatorInScene; }
 
     public void GetAnimatorInScene()
     {
@@ -18,7 +15,7 @@ public class EndGameAnimation : MonoBehaviour
     }
 
     void PlayEndLevelAnim()
-    {
+    { 
         animator.SetTrigger("LevelWin");
     }
 }

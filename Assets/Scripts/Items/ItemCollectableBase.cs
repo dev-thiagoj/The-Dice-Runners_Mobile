@@ -11,10 +11,6 @@ public class ItemCollectableBase : MonoBehaviour
     [Header("Particle System")]
     public ParticleSystem particleSystem;
 
-
-    /*[Header("Sounds")]
-    public AudioSource audioSource;*/
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.CompareTag("Player"))
@@ -49,13 +45,6 @@ public class ItemCollectableBase : MonoBehaviour
 
     protected virtual void OnCollect()
     {
-        //VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.COLLECTCOINS, transform.position);
-
-        if (particleSystem != null)
-        {
-            particleSystem.transform.SetParent(null);
-            particleSystem.Play();
-        }
-
+        
     }
 }

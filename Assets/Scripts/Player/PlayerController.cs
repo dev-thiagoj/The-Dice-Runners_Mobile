@@ -3,7 +3,7 @@ using UnityEngine;
 using Singleton;
 using DG.Tweening;
 
-public class PlayerController : Singleton<PlayerController> // <------- deixar de usar singleton e usar os actions
+public class PlayerController : Singleton<PlayerController> // <------- deixar de usar singleton
 {
     #region === VARIABLES ===
 
@@ -28,19 +28,12 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     float distToGround;
     float spaceToGround = .3f;
 
-    [Header("Turbo PowerUp")] // <---------- srp
-    //public float turboSpeed;
-    //public int maxTurbos = 3;
-    //public int _currTurbo;
-    //public float turboTime = 2;
-    //bool _turboOn = false;
-
-    [Header("Magnetic Powerup")] // <------------------- srp
+    /*[Header("Magnetic Powerup")] // <------------------- srp
     public Transform magneticCollider;
     public ForceFieldManager forceField;
     public float magneticSize;
     public float magneticTime;
-    public bool _hasMagnetic = false;
+    public bool _hasMagnetic = false;*/
 
     [Header("Bounds")]
     private float range = 5.6f;
@@ -53,7 +46,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         if (playerAnimation == null) playerAnimation = GetComponent<PlayerAnimationManager>();
         if (playerPopUp == null) playerPopUp = GetComponent<PlayerPopUpManager>();
-        if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
+        //if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
     }
 
     #region === OnEnable/Disable ===
@@ -61,11 +54,13 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     private void OnEnable()
     {
         _playerInputs.Enable();
+        Actions.onFinishLine += ChangeCanRunValue;
     }
 
     private void OnDisable()
     {
         _playerInputs.Disable();
+        Actions.onFinishLine -= ChangeCanRunValue;
     }
 
     #endregion
@@ -99,7 +94,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
             Bounds();
         }
 
-        if (!canRun) playerAnimation.SetTriggerByString("Idle");
         if (canRun && IsGrounded()) playerAnimation.SetTriggerByString("Run");
         if (!_isAlive && IsGrounded()) Dead();
     }
@@ -108,7 +102,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
 
     public void InvokeStartRun() // <----------- resolver com actions
     {
-        Invoke(nameof(StartRun), 5);
+        Invoke(nameof(ChangeCanRunValue), 5);
         Invoke(nameof(StartExpressions), 4);
     }
 
@@ -117,9 +111,9 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         playerPopUp.CallExpression(ExpressionType.SURPRISE);
     }
 
-    public void StartRun()
+    public void ChangeCanRunValue()
     {
-        canRun = true;
+        canRun = !canRun;
     }
 
     // New Input System _ Mobile
@@ -139,7 +133,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         if (characterController.isGrounded)
         {
             _vSpeed = _currJumpForce;
-            _currSideSpeed = 0;
+            //_currSideSpeed = 0;
             playerAnimation.SetTriggerByString("Jump");
             SFXPool.Instance.Play(SFXType.JUMP_02);
             Invoke(nameof(BackRun), 2);
@@ -161,6 +155,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         _currJumpForce = jumpForce;
         playerAnimation.SetAnimationSpeed(1);
     }
+
     bool IsGrounded()
     {
         Debug.DrawRay(transform.position, -Vector2.up, Color.magenta, distToGround + spaceToGround);
@@ -172,7 +167,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         if (transform.position.x > range)
         {
             characterController.transform.position = new Vector3(range, transform.position.y, transform.position.z);
-
         }
         else if (transform.position.x < -range)
         {
@@ -187,9 +181,9 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         if (_isAlive)
         {
             _isAlive = false;
-            canRun = false;
+            ChangeCanRunValue();
             characterController.detectCollisions = false;
-            playerPopUp.CallExpression(ExpressionType.DEATH); // <--------- criar um action que chama todos os efeitos de morte?
+            playerPopUp.CallExpression(ExpressionType.DEATH);
             OnDead();
         }
     }
@@ -234,7 +228,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         StopCoroutine(TurboCoroutine());
     }*/
 
-    public void MagneticOn(bool b = false)
+    /*public void MagneticOn(bool b = false)
     {
         if (b == true)
         {
@@ -252,6 +246,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         magneticCollider.transform.DOScaleX(1, 1);
         MagneticOn(false);
         StopCoroutine(MagneticCoroutine());
-    }
+    }*/
     #endregion
 }
