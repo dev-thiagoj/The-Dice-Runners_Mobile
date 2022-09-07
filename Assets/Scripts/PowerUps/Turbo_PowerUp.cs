@@ -39,19 +39,21 @@ public class Turbo_PowerUp : MonoBehaviour
 
     public void UseTurbo()
     {
-        if (currTurbo < turbosAmount && player.characterController.isGrounded)
+        if (player.characterController.isGrounded)
         {
-            StartCoroutine(TurboCoroutine());
-            currTurbo++;
-            ItemManager.Instance.RemoveTurbo();
-            return;
+            if (currTurbo < turbosAmount)
+            {
+                StartCoroutine(TurboCoroutine());
+                currTurbo++;
+                ItemManager.Instance.RemoveTurbo();
+                return;
+            }
+            else if (currTurbo == 0)
+            {
+                ItemManager.Instance.WithoutTurboWarning();
+                return;
+            }
         }
-        else if (currTurbo == 0)
-        {
-            ItemManager.Instance.WithoutTurboWarning();
-            return;
-        }
-        else return;
     }
 
     public IEnumerator TurboCoroutine()

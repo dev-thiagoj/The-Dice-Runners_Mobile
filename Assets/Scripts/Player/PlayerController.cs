@@ -28,13 +28,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     float distToGround;
     float spaceToGround = .3f;
 
-    /*[Header("Magnetic Powerup")] // <------------------- srp
-    public Transform magneticCollider;
-    public ForceFieldManager forceField;
-    public float magneticSize;
-    public float magneticTime;
-    public bool _hasMagnetic = false;*/
-
     [Header("Bounds")]
     private float range = 5.6f;
 
@@ -46,7 +39,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         if (playerAnimation == null) playerAnimation = GetComponent<PlayerAnimationManager>();
         if (playerPopUp == null) playerPopUp = GetComponent<PlayerPopUpManager>();
-        //if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
     }
 
     #region === OnEnable/Disable ===
@@ -164,13 +156,15 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
 
     void Bounds()
     {
+        //Vector3 playerPosition = characterController.transform.position;
+
         if (transform.position.x > range)
         {
-            characterController.transform.position = new Vector3(range, transform.position.y, transform.position.z);
+            transform.position = new Vector3(range, transform.position.y, transform.position.z);
         }
         else if (transform.position.x < -range)
         {
-            characterController.transform.position = new Vector3(-range, transform.position.y, transform.position.z);
+            transform.position = new Vector3(-range, transform.position.y, transform.position.z);
         }
     }
     #endregion
@@ -201,51 +195,5 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     }
     #endregion
 
-    #region === POWERUPS ===
-    /*public void TurboPlayer()
-    {
-        if (_currTurbo < maxTurbos && characterController.isGrounded)
-        {
-            StartCoroutine(TurboCoroutine());
-            _currTurbo++;
-            ItemManager.Instance.RemoveTurbo();
-        }
-        else ItemManager.Instance.WithoutTurboWarning();
-    }
-
-    public IEnumerator TurboCoroutine()
-    {
-        if (!_turboOn)
-        {
-            _turboOn = true;
-            _currRunSpeed = turboSpeed;
-            SFXPool.Instance.Play(SFXType.USE_TURBO_06);
-            yield return new WaitForSeconds(turboTime);
-        }
-
-        _currRunSpeed = runSpeed;
-        _turboOn = false;
-        StopCoroutine(TurboCoroutine());
-    }*/
-
-    /*public void MagneticOn(bool b = false)
-    {
-        if (b == true)
-        {
-            StartCoroutine(MagneticCoroutine());
-            forceField.StartParticleField();
-            SFXPool.Instance.Play(SFXType.USE_MAGNETIC_08);
-        }
-
-    }
-
-    public IEnumerator MagneticCoroutine()
-    {
-        magneticCollider.transform.DOScaleX(5, 1);
-        yield return new WaitForSeconds(magneticTime);
-        magneticCollider.transform.DOScaleX(1, 1);
-        MagneticOn(false);
-        StopCoroutine(MagneticCoroutine());
-    }*/
-    #endregion
+    
 }
