@@ -32,7 +32,7 @@ public class ItemCollectableMagnetic : ItemCollectableBase
         base.OnCollect();
         collider.enabled = false;
         collect = true;
-        //PlayerController.Instance.MagneticOn(true);
+        SFXPool.Instance.Play(SFXType.MAGNETIC_COLLECT_07);
         forceField.StartParticleField();
     }
 

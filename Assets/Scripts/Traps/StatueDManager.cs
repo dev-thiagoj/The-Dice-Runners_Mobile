@@ -19,7 +19,7 @@ public class StatueDManager : MonoBehaviour
     {
         if (collision.transform.CompareTag("Player"))
         {
-            PlayerController.Instance.Dead();
+            Actions.onDeadPlayer.Invoke();
             audioHitPlayer.Play();
         }
 

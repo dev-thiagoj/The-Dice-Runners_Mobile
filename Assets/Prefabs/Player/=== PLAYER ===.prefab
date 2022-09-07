@@ -13107,12 +13107,13 @@ GameObject:
   - component: {fileID: 4635048232044946285}
   - component: {fileID: 6455832437459686619}
   - component: {fileID: 4635048232044946286}
-  - component: {fileID: 776501026829666494}
-  - component: {fileID: 1548772739924966175}
   - component: {fileID: 1602650923}
-  - component: {fileID: 613481981719034888}
+  - component: {fileID: 776501026829666494}
+  - component: {fileID: 5747067700605455925}
   - component: {fileID: 7339048029854370933}
   - component: {fileID: 4826130788763507155}
+  - component: {fileID: 613481981719034888}
+  - component: {fileID: 1548772739924966175}
   m_Layer: 0
   m_Name: === PLAYER ===
   m_TagString: Player
@@ -13184,6 +13185,19 @@ MonoBehaviour:
   canRun: 0
   jumpForce: 8
   gravity: 9.8
+--- !u!114 &1602650923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635048232044946284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b76791a280a9c4b4a855b6f8dbfce069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
 --- !u!114 &776501026829666494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13197,6 +13211,76 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canLook: 0
+--- !u!114 &5747067700605455925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635048232044946284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 871f0b1f27478ad47a172516277d355b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isAlive: 1
+  player: {fileID: 4635048232044946286}
+--- !u!114 &7339048029854370933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635048232044946284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc6c9f6936c3e014b9a886240a13b78a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turboSpeed: 15
+  turbosAmount: 3
+  currTurbo: 0
+  turboDuration: 1
+--- !u!114 &4826130788763507155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635048232044946284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 155321c4b99ebd442828f8fcb4b40c49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magneticTrigger: {fileID: 8896210892898174823}
+  forceField: {fileID: 1548772738583100634}
+  player: {fileID: 4635048232044946286}
+  magneticValue: 0
+  magneticSize: 5
+  magneticTime: 10
+  _inUse: 0
+  playerParticleSystem: {fileID: 8387140995125758761}
+--- !u!114 &613481981719034888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635048232044946284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9ac03a13a7ce94d8d937b95ad201b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endSize: 0.5
+  duration: 1
+  ease: 27
+  expressionsSetup:
+  - expressionType: 0
+    expressionGO: {fileID: 744587943852872111}
+  - expressionType: 1
+    expressionGO: {fileID: 3802105770029245778}
 --- !u!82 &1548772739924966175
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13293,76 +13377,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1602650923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4635048232044946284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b76791a280a9c4b4a855b6f8dbfce069, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
---- !u!114 &613481981719034888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4635048232044946284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b9ac03a13a7ce94d8d937b95ad201b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  endSize: 0.5
-  duration: 1
-  ease: 27
-  expressionsSetup:
-  - expressionType: 0
-    expressionGO: {fileID: 744587943852872111}
-  - expressionType: 1
-    expressionGO: {fileID: 3802105770029245778}
---- !u!114 &7339048029854370933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4635048232044946284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc6c9f6936c3e014b9a886240a13b78a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  turboSpeed: 10
-  turbosAmount: 3
-  currTurbo: 0
-  turboDuration: 2
---- !u!114 &4826130788763507155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4635048232044946284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 155321c4b99ebd442828f8fcb4b40c49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  magneticTrigger: {fileID: 8896210892898174823}
-  forceField: {fileID: 1548772738583100634}
-  player: {fileID: 4635048232044946286}
-  magneticValue: 0
-  magneticSize: 5
-  magneticTime: 5
-  _inUse: 0
-  playerParticleSystem: {fileID: 8387140995125758761}
-  UIParticleSystem: {fileID: 0}
 --- !u!1 &4774614948955735996
 GameObject:
   m_ObjectHideFlags: 0
@@ -15053,7 +15067,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 11
       minScalar: 5
       maxCurve:
         serializedVersion: 2

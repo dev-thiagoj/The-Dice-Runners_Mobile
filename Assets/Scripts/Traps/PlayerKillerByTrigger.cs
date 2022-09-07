@@ -13,7 +13,7 @@ public class PlayerKillerByTrigger : MonoBehaviour
     {
         if (other.transform.CompareTag("Player"))
         {
-            PlayerController.Instance.Dead();
+            Actions.onDeadPlayer.Invoke();
             PlaySFX();
         }
     }

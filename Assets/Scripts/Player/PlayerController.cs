@@ -32,7 +32,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     private float range = 5.6f;
 
     internal PlayerInputSystem _playerInputs;
-    private bool _isAlive = true;
+    //private bool _isAlive = true;
     #endregion
 
     private void OnValidate()
@@ -87,7 +87,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         }
 
         if (canRun && IsGrounded()) playerAnimation.SetTriggerByString("Run");
-        if (!_isAlive && IsGrounded()) Dead();
     }
 
     #region === MOVEMENTS ===
@@ -125,7 +124,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         if (characterController.isGrounded)
         {
             _vSpeed = _currJumpForce;
-            //_currSideSpeed = 0;
             playerAnimation.SetTriggerByString("Jump");
             SFXPool.Instance.Play(SFXType.JUMP_02);
             Invoke(nameof(BackRun), 2);
@@ -148,7 +146,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         playerAnimation.SetAnimationSpeed(1);
     }
 
-    bool IsGrounded()
+    public bool IsGrounded()
     {
         Debug.DrawRay(transform.position, -Vector2.up, Color.magenta, distToGround + spaceToGround);
         return Physics.Raycast(transform.position, -Vector2.up, distToGround + spaceToGround);
@@ -156,8 +154,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
 
     void Bounds()
     {
-        //Vector3 playerPosition = characterController.transform.position;
-
         if (transform.position.x > range)
         {
             transform.position = new Vector3(range, transform.position.y, transform.position.z);
@@ -169,7 +165,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     }
     #endregion
 
-    #region === HEALTH ===
+    /*#region === HEALTH ===
     public void Dead()
     {
         if (_isAlive)
@@ -193,7 +189,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         GameManager.Instance.EndGame();
     }
-    #endregion
+    #endregion*/
 
     
 }
