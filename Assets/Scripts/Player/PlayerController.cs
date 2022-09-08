@@ -24,7 +24,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     [SerializeField] float jumpForce = 8;
     [SerializeField] public float gravity = 9.8f;
     float _vSpeed;
-    float _currJumpForce;
     float distToGround;
     float spaceToGround = .3f;
 
@@ -32,7 +31,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     private float range = 5.6f;
 
     internal PlayerInputSystem _playerInputs;
-    //private bool _isAlive = true;
     #endregion
 
     private void OnValidate()
@@ -73,7 +71,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         currRunSpeed = runSpeed;
         _currSideSpeed = sideSpeed;
-        _currJumpForce = jumpForce;
     }
 
     // Update is called once per frame
@@ -123,7 +120,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         if (characterController.isGrounded)
         {
-            _vSpeed = _currJumpForce;
+            _vSpeed = jumpForce;
             playerAnimation.SetTriggerByString("Jump");
             SFXPool.Instance.Play(SFXType.JUMP_02);
             Invoke(nameof(BackRun), 2);
@@ -134,7 +131,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         currRunSpeed = walkSpeed;
         _currSideSpeed = walkSpeed;
-        _currJumpForce = 0;
+        jumpForce = 0;
         playerAnimation.SetAnimationSpeed(.5f);
     }
 
@@ -142,7 +139,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         currRunSpeed = runSpeed;
         _currSideSpeed = sideSpeed;
-        _currJumpForce = jumpForce;
         playerAnimation.SetAnimationSpeed(1);
     }
 
@@ -164,32 +160,4 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
         }
     }
     #endregion
-
-    /*#region === HEALTH ===
-    public void Dead()
-    {
-        if (_isAlive)
-        {
-            _isAlive = false;
-            ChangeCanRunValue();
-            characterController.detectCollisions = false;
-            playerPopUp.CallExpression(ExpressionType.DEATH);
-            OnDead();
-        }
-    }
-
-    public void OnDead()
-    {
-        SFXPool.Instance.Play(SFXType.DEATH_03);
-        playerAnimation.SetTriggerByString("Die");
-        Invoke(nameof(ShowEndGameScreen), 5);
-    }
-
-    public void ShowEndGameScreen()
-    {
-        GameManager.Instance.EndGame();
-    }
-    #endregion*/
-
-    
 }
