@@ -51,5 +51,11 @@ public class PlayerAnimationManager : MonoBehaviour
     void ReachedFinishLine()
     {
         SetTriggerByString("Idle");
+        Invoke(nameof(PlayWinLevelAnim), 1);
+    }
+
+    void PlayWinLevelAnim()
+    {
+        SetTriggerByString("LevelWin");
     }
 }

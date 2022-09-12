@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
-using Singleton;
 using DG.Tweening;
 
-public class PlayerController : Singleton<PlayerController> // <------- deixar de usar singleton
+public class PlayerController : MonoBehaviour
 {
     #region === VARIABLES ===
 
@@ -19,6 +18,7 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     [Range(1, 4)]
     public float walkSpeed = 3;
     public bool canRun = false;
+    public Vector3 currPosition;
 
     [Header("Jump")]
     [SerializeField] float jumpForce = 8;
@@ -45,20 +45,20 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         _playerInputs.Enable();
         Actions.onFinishLine += ChangeCanRunValue;
+        Actions.onGameStarted += InvokeStartRun;
     }
 
     private void OnDisable()
     {
         _playerInputs.Disable();
         Actions.onFinishLine -= ChangeCanRunValue;
+        Actions.onGameStarted -= InvokeStartRun;
     }
 
     #endregion
 
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
-
         _playerInputs = new PlayerInputSystem();
 
         _playerInputs.Gameplay.Jump.performed += ctx => Jump();
@@ -76,6 +76,8 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     // Update is called once per frame
     void Update()
     {
+        currPosition = transform.position;
+
         if (canRun)
         {
             IsGrounded();
@@ -131,7 +133,6 @@ public class PlayerController : Singleton<PlayerController> // <------- deixar d
     {
         currRunSpeed = walkSpeed;
         _currSideSpeed = walkSpeed;
-        jumpForce = 0;
         playerAnimation.SetAnimationSpeed(.5f);
     }
 

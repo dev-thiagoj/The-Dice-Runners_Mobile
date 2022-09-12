@@ -48,10 +48,12 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
 
     public void InstantiatePlayer()
     {
+        var player = GameObject.Find("=== PLAYER ===").GetComponent<PlayerController>();
+
         //instanciar o player na cena
         characters[characterIndex].SetActive(true);
-        PlayerController.Instance.characterController = GameObject.Find("=== PLAYER ===").GetComponentInChildren<CharacterController>();
-        PlayerController.Instance.playerAnimation.FindAnimator();
+        player.characterController = GameObject.Find("=== PLAYER ===").GetComponentInChildren<CharacterController>();
+        player.playerAnimation.FindAnimator();
         vcam.m_AnimatedTarget = characters[characterIndex].GetComponent<Animator>();
         PlayerPrefs.SetInt("currPlayerIndex", characterIndex);
         characterIndex++;

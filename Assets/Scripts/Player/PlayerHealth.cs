@@ -14,9 +14,14 @@ public class PlayerHealth : MonoBehaviour
         playerAnimations = GetComponent<PlayerAnimationManager>();
     }
 
-    private void Awake()
-    {
+    private void OnEnable()
+    {   
         Actions.onDeadPlayer += Dead;
+    }
+
+    private void OnDisable()
+    {
+        Actions.onDeadPlayer -= Dead;
     }
 
     private void Update()
@@ -31,13 +36,13 @@ public class PlayerHealth : MonoBehaviour
             _isAlive = false;
             player.ChangeCanRunValue();
             player.characterController.detectCollisions = false;
-            playerPopUp.CallExpression(ExpressionType.DEATH);
             OnDead();
         }
     }
 
     public void OnDead()
     {
+        playerPopUp.CallExpression(ExpressionType.DEATH);
         SFXPool.Instance.Play(SFXType.DEATH_03);
         playerAnimations.SetTriggerByString("Die");
         Invoke(nameof(ShowEndGameScreen), 5);

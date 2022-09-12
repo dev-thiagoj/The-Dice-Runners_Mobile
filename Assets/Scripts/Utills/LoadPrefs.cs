@@ -34,7 +34,7 @@ public class LoadPrefs : MonoBehaviour
         {
             int localValue = PlayerPrefs.GetInt("maxScore");
 
-            GameManager.Instance.maxScore = localValue;
+            PointsCalculator.Instance.maxScore = localValue;
         }
 
         if (PlayerPrefs.HasKey("level"))

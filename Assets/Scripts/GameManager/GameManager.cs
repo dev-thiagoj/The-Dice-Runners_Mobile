@@ -11,12 +11,11 @@ public class GameManager : Singleton<GameManager>
     #region === VARIABLES ===
 
     [Header("References")]
+    [SerializeField] StarsCalculate starsCalculate;
+    [SerializeField] UIManager uiManager;
     public GameObject mainMenu;
     public GameObject uiContainer;
     public GameObject virtualJoysticks;
-    public TextMeshProUGUI scoreText = null;
-    public TextMeshProUGUI diceText = null;
-    public TextMeshProUGUI maxScoreText = null;
 
     [Header("Buttons Animation")]
     public GameObject btnContainer;
@@ -25,17 +24,7 @@ public class GameManager : Singleton<GameManager>
 
     [Header("Level Complete")]
     public GameObject levelCompleteScreen;
-    public int finalScore;
-    public int turboScore;
-    public int maxScore;
-
-    [Header("Final Stars")]
-    int activeDices;
-    int activeTurbos;
-    int maxPossibleScore;
-    int totalScore;
-    public List<GameObject> fullStars;
-
+    
     [Header("GameOver Screen")]
     public GameObject gameOverScreen;
 
@@ -45,10 +34,6 @@ public class GameManager : Singleton<GameManager>
     
     [Header("Restart Game")]
     public int isRestart; //padrão binário, 0 = não e 1 = sim.
-
-    [Header("Tutorial")]
-    public GameObject[] tutorialImages;
-    public int _viewed = 0;
 
     [Header("Win Level Animation")]
     public Animator winLevelAnim;
@@ -81,8 +66,7 @@ public class GameManager : Singleton<GameManager>
     void Start()
     {
         Time.timeScale = 1;
-        //cameraCanvas.SetActive(false);
-        uiContainer.SetActive(false); // <---------- Fazer serem filhos do mesmo GO (ui, jiystick e minimap).
+        uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
 
@@ -93,32 +77,11 @@ public class GameManager : Singleton<GameManager>
             _isGameStarted = false;
         }
         else StartRun();
-
-        Invoke(nameof(ActiveCollectablesCount), 2);
     }
 
     private void Update()
     {
         if (_isGameStarted && Input.GetKeyUp(KeyCode.Escape)) PauseGame();
-    }
-
-    public void ActiveCollectablesCount()
-    {
-        int turbos = GameObject.Find("=== PLAYER ===").GetComponent<Turbo_PowerUp>().turbosAmount;
-
-        activeDices = FindObjectsOfType(typeof(ItemCollectableCoin)).Length;
-        activeTurbos = FindObjectsOfType(typeof(ItemCollectableTurbo)).Length;
-
-        maxPossibleScore = activeDices * (activeTurbos + turbos);
-        showUILevel.text = "Level " + LevelManager.Instance.level;
-    }
-
-    void TurnAllStarsOff()
-    {
-        foreach (var gameObject in fullStars)
-        {
-            gameObject.SetActive(false);
-        }
     }
 
     public void AnimationButtons()
@@ -128,23 +91,15 @@ public class GameManager : Singleton<GameManager>
 
     void FindEndAnimInScene()
     {
-        InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter(); // <------- melhorar esse pra não ter de instanciar
-    }
-
-    void ReachedFinishLine()
-    {
-        LevelComplete(); // <------- desnecessario, puxar o level complete direto do action
+        InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter();
     }
 
     public void StartRun()
     {
         SFXPool.Instance.CreatePool();
         _isGameStarted = true;
-        PlayerController.Instance.InvokeStartRun(); // <=-------- refatorar para um action
-        RollDice.Instance.InvokeStartRoll(); // <--------- refatorar as chamadas do dado
-        RollDice.Instance.CallDiceSFX();
+        Actions.onGameStarted.Invoke();
         Cursor.visible = false;
-        //Cursor.visible = !Cursor.visible; <----------teste p/ implementar
         Invoke(nameof(ShowInGameUI), 6);
     }
 
@@ -157,7 +112,6 @@ public class GameManager : Singleton<GameManager>
 
     public void PauseGame()
     {
-        RollDice.Instance.canMove = false;
         Time.timeScale = 0;
         miniMap.gameObject.SetActive(false);
         pauseScreen.SetActive(true);
@@ -170,7 +124,6 @@ public class GameManager : Singleton<GameManager>
     public void ResumeGame()
     {
         Time.timeScale = 1;
-        RollDice.Instance.canMove = true;
         pauseScreen.SetActive(false);
         miniMap.gameObject.SetActive(true);                                                                 
         AudioListener.pause = false;
@@ -179,7 +132,6 @@ public class GameManager : Singleton<GameManager>
 
     public void EndGame()
     {
-        //PlayerController.Instance.canRun = false;
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
@@ -191,8 +143,6 @@ public class GameManager : Singleton<GameManager>
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
-        PlayerController.Instance.playerAnimation.SetTriggerByString("EndGame");
-        PiecesManager.Instance.AddIndex();
         UpdateUI();
         Invoke(nameof(ShowLevelCompleteScreen), 5);
     }
@@ -229,56 +179,7 @@ public class GameManager : Singleton<GameManager>
 
     public void UpdateUI()
     {
-        TurnTurboInPoints();
-        totalScore = ItemManager.Instance.dice * turboScore;
-        SaveMaxScore();
-        StarsCalculate();
-        scoreText.text = "Score: " + totalScore.ToString("000");
-        diceText.text = "Dices: " + ItemManager.Instance.dice.ToString("000");
-    }
-
-    void TurnTurboInPoints()
-    {
-        turboScore = ItemManager.Instance.turbo;
-
-        if (turboScore == 0) turboScore = 1;
-    }
-
-    void SaveMaxScore()
-    {
-        if (totalScore > maxScore)
-        {
-            maxScore = totalScore;
-
-            maxScoreText.text = ("NEW  " + maxScore).ToString();
-            maxScoreText.color = Color.green;
-
-            PlayerPrefs.SetInt("maxScore", maxScore);
-        }
-        else
-        {
-            maxScoreText.text = maxScore.ToString();
-            maxScoreText.color = Color.yellow;
-        }
-    }
-
-    void StarsCalculate()
-    {
-        if (totalScore > (maxPossibleScore * 0.2f) && totalScore < (maxPossibleScore * 0.4f))
-        {
-            fullStars[0].SetActive(true);
-        }
-        else if (totalScore >= maxPossibleScore * 0.4f && totalScore < maxPossibleScore * 0.7f)
-        {
-            fullStars[0].SetActive(true);
-            fullStars[1].SetActive(true);
-        }
-        else if (totalScore >= maxPossibleScore * 0.7f)
-        {
-            foreach (var star in fullStars)
-            {
-                star.SetActive(true);
-            }
-        }
+        starsCalculate.UpdateUI();
+        uiManager.UpdateUIScores();
     }
 }

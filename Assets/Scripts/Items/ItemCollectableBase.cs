@@ -4,12 +4,24 @@ using UnityEngine;
 
 public class ItemCollectableBase : MonoBehaviour
 {
+    public PlayerController player;
+    public Vector3 targetPosition;
     public float timeToHide = 0.1f;
     public float timeToDestroy = 0.1f;
     public GameObject graphicItem;
 
     [Header("Particle System")]
     public ParticleSystem particleSystem;
+
+    private void Awake()
+    {
+        player = GameObject.Find("=== PLAYER ===").GetComponent<PlayerController>();
+    }
+
+    private void FixedUpdate()
+    {
+        targetPosition = player.currPosition;
+    }
 
     private void OnTriggerEnter(Collider other)
     {

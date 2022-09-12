@@ -32,9 +32,9 @@ public class ItemCollectableTurbo : ItemCollectableBase
     {
         if (collect)
         {
-            transform.position = Vector3.Lerp(transform.position, PlayerController.Instance.transform.position, lerpSpeed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, player.transform.position, lerpSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) < minDistance)
+            if (Vector3.Distance(transform.position, player.transform.position) < minDistance)
             {
                 HideItens();
                 Destroy(gameObject);

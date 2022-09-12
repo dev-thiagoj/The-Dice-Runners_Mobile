@@ -22,7 +22,11 @@ public class PiecesManager : Singleton<PiecesManager>
 
     public void AddIndex()
     {
-        _index += 1;
-        PlayerPrefs.SetInt("pieceIndex", _index);
+        if (_index <= 24)
+        {
+            _index += 1;
+            PlayerPrefs.SetInt("pieceIndex", _index);
+        }
+        return;
     }
 }
