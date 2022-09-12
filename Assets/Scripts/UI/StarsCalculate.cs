@@ -1,29 +1,28 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class StarsCalculate : MonoBehaviour
 {
-    /*[Header("References")]
-    public TextMeshProUGUI scoreText = null;
-    public TextMeshProUGUI diceText = null;
-    public TextMeshProUGUI maxScoreText = null;*/
+    [Header("References")]
+    [SerializeField] PointsCalculator pointsCalculator;
 
     [Header("Final Stars")]
     public List<GameObject> fullStars;
 
+    private void Awake()
+    {
+        if (pointsCalculator == null) pointsCalculator = GetComponent<PointsCalculator>();
+    }
+
     public void UpdateUI()
     {
         Calculate();
-        //scoreText.text = "Score: " + PointsCalculator.Instance.Calculate().ToString("000");
-        //diceText.text = "Dices: " + ItemManager.Instance.dice.ToString("000");
     }
 
     void Calculate()
     {
-        var totalScore = PointsCalculator.Instance.CalculateTotalScore();
-        var maxPossibleScore = PointsCalculator.Instance.ActiveCollectablesCount();
+        var totalScore = pointsCalculator.CalculateTotalScore();
+        var maxPossibleScore = pointsCalculator.ActiveCollectablesCount();
 
         if (totalScore > (maxPossibleScore * 0.2f) && totalScore < (maxPossibleScore * 0.4f))
         {

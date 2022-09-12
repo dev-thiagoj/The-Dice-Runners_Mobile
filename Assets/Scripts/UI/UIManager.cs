@@ -1,58 +1,45 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    /*[Header("References")]
-    public GameObject mainMenu;
-    public GameObject uiContainer;
-    public GameObject virtualJoysticks;*/
+    [Header("References")]
+    [SerializeField] LevelManager levelManager;
+    [SerializeField] ItemManager itemManager;
+    [SerializeField] PointsCalculator pointsCalculator;
     public TextMeshProUGUI scoreText = null;
     public TextMeshProUGUI diceText = null;
     public TextMeshProUGUI maxScoreText = null;
-
-    /*[Header("Buttons Animation")]
-    public GameObject btnContainer;
-    public Ease ease;
-    public float timeBtnAnim;
-
-    [Header("Level Complete")]
-    public GameObject levelCompleteScreen;
-
-    [Header("GameOver Screen")]
-    public GameObject gameOverScreen;
-
-    [Header("Pause Game")]
-    public GameObject pauseScreen;*/
 
     [Header("UI Level")]
     public TextMeshProUGUI showUILevel;
     public int level;
 
-    /*[Header("Mini Map")]
-    public Transform miniMap;*/
+    private void Awake()
+    {
+        if (levelManager == null) levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+        if (itemManager == null) itemManager = GameObject.Find("ItemManager").GetComponent<ItemManager>();
+        if (pointsCalculator == null) pointsCalculator = GetComponent<PointsCalculator>();
+    }
 
     private void Start()
     {
-        this.level = LevelManager.Instance.level;
+        this.level = levelManager.level;
         showUILevel.text = "Level " + level;
     }
 
     public void UpdateUIScores()
     {
-        scoreText.text = "Score: " + PointsCalculator.Instance.CalculateTotalScore().ToString("000");
-        diceText.text = "Dices: " + ItemManager.Instance.dice.ToString("000");
+        scoreText.text = "Score: " + pointsCalculator.CalculateTotalScore().ToString("000");
+        diceText.text = "Dices: " + itemManager.dice.ToString("000");
 
-        if (PointsCalculator.Instance.IsMaxScoreReached())
+        if (pointsCalculator.IsMaxScoreReached())
         {
-            maxScoreText.text = (PointsCalculator.Instance.maxScore).ToString();
+            maxScoreText.text = (pointsCalculator.maxScore).ToString();
             maxScoreText.color = Color.green;
             return;
         }
-        maxScoreText.text = PointsCalculator.Instance.maxScore.ToString();
+        maxScoreText.text = pointsCalculator.maxScore.ToString();
         maxScoreText.color = Color.yellow;
     }
 }

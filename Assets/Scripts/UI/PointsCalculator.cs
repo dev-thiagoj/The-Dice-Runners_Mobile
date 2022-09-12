@@ -1,7 +1,6 @@
 using UnityEngine;
-using Singleton;
 
-public class PointsCalculator : Singleton<PointsCalculator>
+public class PointsCalculator : MonoBehaviour
 {
     [Header("Points")]
     public int finalScore;
@@ -12,11 +11,6 @@ public class PointsCalculator : Singleton<PointsCalculator>
     int activeTurbos;
     int maxPossibleScore;
     int totalScore;
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
 
     private void Start()
     {

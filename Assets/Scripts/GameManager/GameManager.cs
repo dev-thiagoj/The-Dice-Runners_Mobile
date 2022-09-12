@@ -11,27 +11,28 @@ public class GameManager : Singleton<GameManager>
     #region === VARIABLES ===
 
     [Header("References")]
-    [SerializeField] StarsCalculate starsCalculate;
     [SerializeField] UIManager uiManager;
-    public GameObject mainMenu;
-    public GameObject uiContainer;
-    public GameObject virtualJoysticks;
+    [SerializeField] StarsCalculate starsCalculate;
+    [SerializeField] GameObject mainMenu;
+    [SerializeField] GameObject uiContainer;
+    [SerializeField] GameObject virtualJoysticks;
+    [SerializeField] CrossfadeLevelLoader crossfadeLevelLoader;
 
     [Header("Buttons Animation")]
-    public GameObject btnContainer;
-    public Ease ease;
-    public float timeBtnAnim;
+    [SerializeField] GameObject btnContainer;
+    [SerializeField] Ease ease;
+    [SerializeField] float timeBtnAnim;
 
     [Header("Level Complete")]
-    public GameObject levelCompleteScreen;
-    
+    [SerializeField] GameObject levelCompleteScreen;
+
     [Header("GameOver Screen")]
-    public GameObject gameOverScreen;
+    [SerializeField] GameObject gameOverScreen;
 
     [Header("Pause Game")]
-    public GameObject pauseScreen;
+    [SerializeField] GameObject pauseScreen;
     private bool _isGameStarted;
-    
+
     [Header("Restart Game")]
     public int isRestart; //padrão binário, 0 = não e 1 = sim.
 
@@ -39,10 +40,10 @@ public class GameManager : Singleton<GameManager>
     public Animator winLevelAnim;
 
     [Header("UI Level")]
-    public TextMeshProUGUI showUILevel;
+    [SerializeField] TextMeshProUGUI showUILevel;
 
     [Header("Mini Map")]
-    public Transform miniMap;
+    [SerializeField] Transform miniMap;
     #endregion
 
     private void OnEnable()
@@ -60,6 +61,9 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
+
+        if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        if (starsCalculate == null) starsCalculate = GameObject.Find("UIManager").GetComponent<StarsCalculate>();
     }
 
     // Start is called before the first frame update
@@ -125,7 +129,7 @@ public class GameManager : Singleton<GameManager>
     {
         Time.timeScale = 1;
         pauseScreen.SetActive(false);
-        miniMap.gameObject.SetActive(true);                                                                 
+        miniMap.gameObject.SetActive(true);
         AudioListener.pause = false;
         Cursor.visible = false;
     }
@@ -152,7 +156,7 @@ public class GameManager : Singleton<GameManager>
         levelCompleteScreen.SetActive(true);
         Cursor.visible = true;
     }
-    
+
     public void ShowGameOverScreen()
     {
         gameOverScreen.SetActive(true);
@@ -162,13 +166,15 @@ public class GameManager : Singleton<GameManager>
     public void RestartGame()
     {
         PlayerPrefs.SetInt("isRestart", 1);
-        SceneManager.LoadScene(1);
+        //SceneManager.LoadScene(1);
+        crossfadeLevelLoader.StartCrossfadeAnim(1);
     }
 
     public void GoToMenu()
     {
         PlayerPrefs.SetInt("isRestart", 0);
-        SceneManager.LoadScene(1);
+        //SceneManager.LoadScene(1);
+        crossfadeLevelLoader.StartCrossfadeAnim(1);
     }
 
     public void ExitApplication()

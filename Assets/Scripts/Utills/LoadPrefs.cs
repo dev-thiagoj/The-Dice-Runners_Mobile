@@ -10,6 +10,7 @@ public class LoadPrefs : MonoBehaviour
     public AudioSource musicSource;
     public Slider volumeSlider;
     public TextMeshProUGUI sliderValue;
+
     public InstantiatePlayerHelper instantiatePlayer;
 
     private void Awake()
@@ -32,9 +33,10 @@ public class LoadPrefs : MonoBehaviour
 
         if (PlayerPrefs.HasKey("maxScore"))
         {
+            var pointsCalculator = GameObject.Find("UIManager").GetComponent<PointsCalculator>();
             int localValue = PlayerPrefs.GetInt("maxScore");
 
-            PointsCalculator.Instance.maxScore = localValue;
+            pointsCalculator.maxScore = localValue;
         }
 
         if (PlayerPrefs.HasKey("level"))
