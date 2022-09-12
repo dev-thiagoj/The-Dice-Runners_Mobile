@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,9 @@ public class ItemCollectableMagnetic : ItemCollectableBase
     [Header("Player Particle Field")]
     [SerializeField] ForceFieldManager forceField;
 
+    [Header("Actions")]
+    public static Action onMagneticCollect;
+
     private void OnValidate()
     {
         if (forceField == null) forceField = GetComponentInChildren<ForceFieldManager>();
@@ -19,6 +23,7 @@ public class ItemCollectableMagnetic : ItemCollectableBase
 
     protected override void Collect()
     {
+        onMagneticCollect.Invoke();
         OnCollect();
     }
 
@@ -27,7 +32,7 @@ public class ItemCollectableMagnetic : ItemCollectableBase
         base.OnCollect();
         collider.enabled = false;
         collect = true;
-        PlayerController.Instance.MagneticOn(true);
+        SFXPool.Instance.Play(SFXType.MAGNETIC_COLLECT_07);
         forceField.StartParticleField();
     }
 
@@ -35,9 +40,9 @@ public class ItemCollectableMagnetic : ItemCollectableBase
     {
         if (collect)
         {
-            transform.position = Vector3.Lerp(transform.position, PlayerController.Instance.transform.position, lerpSpeed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, player.transform.position, lerpSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) < minDistance)
+            if (Vector3.Distance(transform.position, player.transform.position) < minDistance)
             {
                 HideItens();
                 Destroy(gameObject);

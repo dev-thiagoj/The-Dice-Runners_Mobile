@@ -149,7 +149,7 @@ public class LevelManager : Singleton<LevelManager>
             yield return new WaitForSeconds(timeBetweenSpawns);
         }
 
-        Actions.findFemaleAnim();
+        Actions.findEndLevelAnim();
     }
 
     void BalanceWithEmptyPieces()

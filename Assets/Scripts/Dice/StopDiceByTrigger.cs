@@ -1,16 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class StopDiceByTrigger : MonoBehaviour
 {
+    public RollDice masterDice;
+    public static Action onDiceTriggered; 
+
+    private void Start()
+    {
+        masterDice = GameObject.Find("=== DICE ===").GetComponent<RollDice>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.CompareTag("Dice"))
         {
-            RollDice.Instance.canMove = false;
-            RollDice.Instance.StopVFX();
-            RollDice.Instance.audioSource.Stop();
+            //masterDice.canMove = false;
+            //masterDice.StopVFX();
+            //masterDice.audioSource.Stop();
+            onDiceTriggered.Invoke();
         }
     }
 }

@@ -62,11 +62,20 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Magnetic"",
+                    ""type"": ""Button"",
+                    ""id"": ""e971aec6-8ea5-48a8-816c-0aac85a71f2f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
-                    ""name"": ""Left/Right"",
+                    ""name"": ""Left/Right_Mobile"",
                     ""id"": ""99574173-8576-4272-9da4-9e5e245f683b"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -99,9 +108,53 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""Left/Right_PC"",
+                    ""id"": ""8640482f-f6bb-4fdc-b8e4-dced46afd8ff"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ac313b4d-2e22-4bc8-919a-e8113040f465"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e89f9270-857a-4073-8e84-a3147838e010"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""e7b37fcb-b95e-4601-a99b-2dc0bf574845"",
                     ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6141d20-2505-4cc9-bbd2-ac62b709df53"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -122,12 +175,56 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""51e42e66-93ab-4e36-aa7c-ccc6e06bd221"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Turbo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""a2a9b6c6-67a0-4944-b3ab-9418dc1491f4"",
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Stop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bccdb8af-89e4-4169-ba63-908541cca036"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Stop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a6dc7c05-927c-441a-9548-36dc7d532a1a"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Magnetic"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a2148ecf-7b82-40ee-ba44-10537ad7bff3"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Magnetic"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -142,6 +239,7 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_Turbo = m_Gameplay.FindAction("Turbo", throwIfNotFound: true);
         m_Gameplay_Stop = m_Gameplay.FindAction("Stop", throwIfNotFound: true);
+        m_Gameplay_Magnetic = m_Gameplay.FindAction("Magnetic", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -205,6 +303,7 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Jump;
     private readonly InputAction m_Gameplay_Turbo;
     private readonly InputAction m_Gameplay_Stop;
+    private readonly InputAction m_Gameplay_Magnetic;
     public struct GameplayActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -213,6 +312,7 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
         public InputAction @Turbo => m_Wrapper.m_Gameplay_Turbo;
         public InputAction @Stop => m_Wrapper.m_Gameplay_Stop;
+        public InputAction @Magnetic => m_Wrapper.m_Gameplay_Magnetic;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -234,6 +334,9 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
                 @Stop.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnStop;
                 @Stop.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnStop;
                 @Stop.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnStop;
+                @Magnetic.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMagnetic;
+                @Magnetic.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMagnetic;
+                @Magnetic.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMagnetic;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -250,6 +353,9 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
                 @Stop.started += instance.OnStop;
                 @Stop.performed += instance.OnStop;
                 @Stop.canceled += instance.OnStop;
+                @Magnetic.started += instance.OnMagnetic;
+                @Magnetic.performed += instance.OnMagnetic;
+                @Magnetic.canceled += instance.OnMagnetic;
             }
         }
     }
@@ -260,5 +366,6 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnTurbo(InputAction.CallbackContext context);
         void OnStop(InputAction.CallbackContext context);
+        void OnMagnetic(InputAction.CallbackContext context);
     }
 }

@@ -11,78 +11,65 @@ public class GameManager : Singleton<GameManager>
     #region === VARIABLES ===
 
     [Header("References")]
-    public GameObject mainMenu;
-    public GameObject uiContainer;
-    public GameObject virtualJoysticks;
-    public TextMeshProUGUI scoreText = null;
-    public TextMeshProUGUI diceText = null;
-    public TextMeshProUGUI maxScoreText = null;
+    [SerializeField] UIManager uiManager;
+    [SerializeField] StarsCalculate starsCalculate;
+    [SerializeField] GameObject mainMenu;
+    [SerializeField] GameObject uiContainer;
+    [SerializeField] GameObject virtualJoysticks;
+    [SerializeField] CrossfadeLevelLoader crossfadeLevelLoader;
 
     [Header("Buttons Animation")]
-    public GameObject btnContainer;
-    public Ease ease;
-    public float timeBtnAnim;
+    [SerializeField] GameObject btnContainer;
+    [SerializeField] Ease ease;
+    [SerializeField] float timeBtnAnim;
 
     [Header("Level Complete")]
-    public GameObject levelCompleteScreen;
-    public int finalScore;
-    public int turboScore;
-    public int maxScore;
-    public bool checkedEndLine = false;
-
-    [Header("Final Stars")]
-    int activeDices;
-    int activeTurbos;
-    int maxPossibleScore;
-    int totalScore;
-    public List<GameObject> fullStars;
+    [SerializeField] GameObject levelCompleteScreen;
 
     [Header("GameOver Screen")]
-    public GameObject gameOverScreen;
+    [SerializeField] GameObject gameOverScreen;
 
     [Header("Pause Game")]
-    public GameObject pauseScreen;
+    [SerializeField] GameObject pauseScreen;
     private bool _isGameStarted;
-    
+
     [Header("Restart Game")]
     public int isRestart; //padrão binário, 0 = não e 1 = sim.
-
-    [Header("Tutorial")]
-    public GameObject[] tutorialImages;
-    public int _viewed = 0;
 
     [Header("Win Level Animation")]
     public Animator winLevelAnim;
 
     [Header("UI Level")]
-    public TextMeshProUGUI showUILevel;
+    [SerializeField] TextMeshProUGUI showUILevel;
 
     [Header("Mini Map")]
-    public Transform miniMap;
+    [SerializeField] Transform miniMap;
     #endregion
 
     private void OnEnable()
     {
-        Actions.startTutorial += StartTutorialCoroutine;
-        Actions.findFemaleAnim += FindFemaleAnimInScene;
+        Actions.findEndLevelAnim += FindEndAnimInScene;
+        Actions.onFinishLine += LevelComplete;
     }
 
     private void OnDisable()
     {
-        Actions.startTutorial -= StartTutorialCoroutine;
-        Actions.findFemaleAnim -= FindFemaleAnimInScene;
+        Actions.findEndLevelAnim -= FindEndAnimInScene;
+        Actions.onFinishLine -= LevelComplete;
     }
 
     protected override void Awake()
     {
         base.Awake();
+
+        if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        if (starsCalculate == null) starsCalculate = GameObject.Find("UIManager").GetComponent<StarsCalculate>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 1;
-        //cameraCanvas.SetActive(false);
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
@@ -94,8 +81,6 @@ public class GameManager : Singleton<GameManager>
             _isGameStarted = false;
         }
         else StartRun();
-
-        Invoke(nameof(ActiveCollectablesCount), 2);
     }
 
     private void Update()
@@ -103,41 +88,21 @@ public class GameManager : Singleton<GameManager>
         if (_isGameStarted && Input.GetKeyUp(KeyCode.Escape)) PauseGame();
     }
 
-    public void ActiveCollectablesCount()
-    {
-        activeDices = FindObjectsOfType(typeof(ItemCollectableCoin)).Length;
-        activeTurbos = FindObjectsOfType(typeof(ItemCollectableTurbo)).Length;
-
-        maxPossibleScore = activeDices * (activeTurbos + PlayerController.Instance.maxTurbos);
-        showUILevel.text = "Level " + LevelManager.Instance.level;
-    }
-
-    void TurnAllStarsOff()
-    {
-        foreach (var gameObject in fullStars)
-        {
-            gameObject.SetActive(false);
-        }
-    }
-
     public void AnimationButtons()
     {
         btnContainer.transform.DOScale(0, timeBtnAnim).SetEase(ease).From();
     }
 
-    void FindFemaleAnimInScene()
+    void FindEndAnimInScene()
     {
         InstantiatePlayerHelper.Instance.InstantiateEndLevelCharacter();
-        //femaleAnim = GameObject.Find("CharacterPos").GetComponentInChildren<Animator>();
     }
 
     public void StartRun()
     {
         SFXPool.Instance.CreatePool();
         _isGameStarted = true;
-        PlayerController.Instance.InvokeStartRun();
-        RollDice.Instance.InvokeStartRoll();
-        RollDice.Instance.CallDiceSFX();
+        Actions.onGameStarted.Invoke();
         Cursor.visible = false;
         Invoke(nameof(ShowInGameUI), 6);
     }
@@ -151,7 +116,6 @@ public class GameManager : Singleton<GameManager>
 
     public void PauseGame()
     {
-        RollDice.Instance.canMove = false;
         Time.timeScale = 0;
         miniMap.gameObject.SetActive(false);
         pauseScreen.SetActive(true);
@@ -164,16 +128,14 @@ public class GameManager : Singleton<GameManager>
     public void ResumeGame()
     {
         Time.timeScale = 1;
-        RollDice.Instance.canMove = true;
         pauseScreen.SetActive(false);
-        miniMap.gameObject.SetActive(true);                                                                 
+        miniMap.gameObject.SetActive(true);
         AudioListener.pause = false;
         Cursor.visible = false;
     }
 
     public void EndGame()
     {
-        PlayerController.Instance.canRun = false;
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
@@ -182,13 +144,9 @@ public class GameManager : Singleton<GameManager>
 
     public void LevelComplete()
     {
-        PlayerController.Instance.canRun = false;
         uiContainer.SetActive(false);
         virtualJoysticks.SetActive(false);
         miniMap.gameObject.SetActive(false);
-        winLevelAnim.SetTrigger("LevelWin");
-        PlayerController.Instance.animator.SetTrigger("EndGame");
-        PiecesManager.Instance.AddIndex();
         UpdateUI();
         Invoke(nameof(ShowLevelCompleteScreen), 5);
     }
@@ -198,7 +156,7 @@ public class GameManager : Singleton<GameManager>
         levelCompleteScreen.SetActive(true);
         Cursor.visible = true;
     }
-    
+
     public void ShowGameOverScreen()
     {
         gameOverScreen.SetActive(true);
@@ -208,95 +166,26 @@ public class GameManager : Singleton<GameManager>
     public void RestartGame()
     {
         PlayerPrefs.SetInt("isRestart", 1);
-        SceneManager.LoadScene(1);
+        //SceneManager.LoadScene(1);
+        crossfadeLevelLoader.StartCrossfadeAnim(1);
     }
 
     public void GoToMenu()
     {
         PlayerPrefs.SetInt("isRestart", 0);
-        SceneManager.LoadScene(1);
+        //SceneManager.LoadScene(1);
+        crossfadeLevelLoader.StartCrossfadeAnim(1);
     }
 
     public void ExitApplication()
     {
-        PlayerPrefs.SetInt("viewedTutorial", 0);
         PlayerPrefs.SetInt("isRestart", 0);
         Application.Quit();
     }
 
     public void UpdateUI()
     {
-        TurnTurboInPoints();
-        totalScore = ItemManager.Instance.dice * turboScore;
-        //if (checkedEndLine) totalScore += 300;
-        SaveMaxScore();
-        StarsCalculate();
-        scoreText.text = "Score: " + totalScore.ToString("000");
-        diceText.text = "Dices: " + ItemManager.Instance.dice.ToString("000");
-    }
-
-    void TurnTurboInPoints()
-    {
-        turboScore = ItemManager.Instance.turbo;
-
-        if (turboScore == 0) turboScore = 1;
-    }
-
-    void SaveMaxScore()
-    {
-        if (totalScore > maxScore)
-        {
-            maxScore = totalScore;
-
-            maxScoreText.text = ("NEW  " + maxScore).ToString();
-            maxScoreText.color = Color.green;
-
-            PlayerPrefs.SetInt("maxScore", maxScore);
-        }
-        else
-        {
-            maxScoreText.text = maxScore.ToString();
-            maxScoreText.color = Color.yellow;
-        }
-    }
-
-    void StarsCalculate()
-    {
-        if (totalScore > (maxPossibleScore * 0.2f) && totalScore < (maxPossibleScore * 0.4f))
-        {
-            fullStars[0].SetActive(true);
-        }
-        else if (totalScore >= maxPossibleScore * 0.4f && totalScore < maxPossibleScore * 0.7f)
-        {
-            fullStars[0].SetActive(true);
-            fullStars[1].SetActive(true);
-        }
-        else if (totalScore >= maxPossibleScore * 0.7f)
-        {
-            foreach (var star in fullStars)
-            {
-                star.SetActive(true);
-            }
-        }
-    }
-
-    public void StartTutorialCoroutine()
-    {
-        if (_viewed == 0) StartCoroutine(TutorialCoroutine());
-        else return;
-    }
-
-    public IEnumerator TutorialCoroutine()
-    {
-        for (int i = 0; i < tutorialImages.Length; i++)
-        {
-            tutorialImages[i].SetActive(true);
-            yield return new WaitForSeconds(3);
-            tutorialImages[i].SetActive(false);
-            yield return new WaitForSeconds(1);
-        }
-
-        _viewed = 1;
-        PlayerPrefs.SetInt("viewedTutorial", 1);
+        starsCalculate.UpdateUI();
+        uiManager.UpdateUIScores();
     }
 }

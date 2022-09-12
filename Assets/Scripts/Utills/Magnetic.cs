@@ -2,16 +2,25 @@ using UnityEngine;
 
 public class Magnetic : MonoBehaviour
 {
+    public PlayerController playerPosition;
+    public Vector3 targetPosition;
     public float dist = .2f;
     public float coinSpeed = 3f;
 
-    private void Update()
+    private void Awake()
     {
-        if(Vector3.Distance(transform.position, PlayerController.Instance.transform.position) > dist)
+        playerPosition = GameObject.Find("=== PLAYER ===").GetComponent<PlayerController>();
+    }
+
+    private void FixedUpdate()
+    {
+        targetPosition = playerPosition.currPosition;
+
+        if(Vector3.Distance(transform.position, targetPosition) > dist)
         {
             coinSpeed++;
             
-            transform.position = Vector3.MoveTowards(transform.position, PlayerController.Instance.transform.position, Time.deltaTime * coinSpeed);
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * coinSpeed);
         } 
     }
 }

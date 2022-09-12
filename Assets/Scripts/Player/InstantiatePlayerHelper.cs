@@ -8,7 +8,7 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
     public List<GameObject> characters;
     public List<GameObject> endLevelCharacters;
     public GameObject currEndCharacter;
-    public int characterIndex = 0;
+    public int characterIndex;
     public GameObject endLevelCharacterPos;
     public Cinemachine.CinemachineStateDrivenCamera vcam;
 
@@ -19,14 +19,18 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
 
     private void Start()
     {
-        ChoosePlayer();
-        characterIndex = 0;
+        if (!PlayerPrefs.HasKey("currPlayerIndex"))
+        {
+            ChoosePlayer();
+            characterIndex = 0;
+        }
+
         InstantiatePlayer();
     }
 
+    //escolher o player que será usado no jogo
     public void ChoosePlayer()
     {
-        //escolher o player que será usado no jogo
         foreach (var character in characters)
         {
             character.SetActive(false);
@@ -44,25 +48,27 @@ public class InstantiatePlayerHelper : Singleton<InstantiatePlayerHelper>
 
     public void InstantiatePlayer()
     {
+        var player = GameObject.Find("=== PLAYER ===").GetComponent<PlayerController>();
+
         //instanciar o player na cena
         characters[characterIndex].SetActive(true);
+        player.characterController = GameObject.Find("=== PLAYER ===").GetComponentInChildren<CharacterController>();
+        player.playerAnimation.FindAnimator();
         vcam.m_AnimatedTarget = characters[characterIndex].GetComponent<Animator>();
-        PlayerController.Instance.characterController = GameObject.Find("=== PLAYER ===").GetComponentInChildren<CharacterController>();
-        PlayerController.Instance.animator = GameObject.Find("=== PLAYER ===").GetComponentInChildren<Animator>();
+        PlayerPrefs.SetInt("currPlayerIndex", characterIndex);
         characterIndex++;
         if (characterIndex == 2) characterIndex = 0;
-        //InstantiateEndLevelCharacter();
     }
 
     public void InstantiateEndLevelCharacter()
     {
-        if(currEndCharacter != null) Destroy(currEndCharacter);
-        endLevelCharacterPos = GameObject.Find("CharacterPos");
-        
+        if (currEndCharacter != null) Destroy(currEndCharacter);
+
         //instanciar oq não foi escolhido para ficar no fim do level
+        endLevelCharacterPos = GameObject.Find("CharacterPos");
         currEndCharacter = Instantiate(endLevelCharacters[characterIndex], endLevelCharacterPos.transform);
         currEndCharacter.transform.position = endLevelCharacterPos.transform.position;
         currEndCharacter.gameObject.SetActive(true);
         GameManager.Instance.winLevelAnim = currEndCharacter.GetComponent<Animator>();
-    } 
+    }
 }

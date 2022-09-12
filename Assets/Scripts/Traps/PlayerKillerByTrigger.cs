@@ -5,25 +5,20 @@ using UnityEngine;
 public class PlayerKillerByTrigger : MonoBehaviour
 {
     public AudioSource audioSource;
-    public Collider collider;
 
     [Range(0, 1)]
     public float sfxVolume;
-
-    private void OnValidate()
-    {
-        collider = GetComponent<Collider>();
-    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.CompareTag("Player"))
         {
-            if (PlayerController.Instance._isAlive == true) PlayerController.Instance._isAlive = false;
+            Actions.onDeadPlayer.Invoke();
             PlaySFX();
         }
     }
 
+    // is used to play the specific trap kill sfx
     public void PlaySFX()
     {
         //SFXPool.Instance.Play(sfxType);

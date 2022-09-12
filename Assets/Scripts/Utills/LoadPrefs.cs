@@ -11,6 +11,8 @@ public class LoadPrefs : MonoBehaviour
     public Slider volumeSlider;
     public TextMeshProUGUI sliderValue;
 
+    public InstantiatePlayerHelper instantiatePlayer;
+
     private void Awake()
     {
         if (PlayerPrefs.HasKey("masterVolume"))
@@ -22,13 +24,6 @@ public class LoadPrefs : MonoBehaviour
             musicSource.volume = localVolume;
         }
 
-        if (PlayerPrefs.HasKey("viewedTutorial"))
-        {
-            int localValue = PlayerPrefs.GetInt("viewedTutorial");
-
-            GameManager.Instance._viewed = localValue;
-        }
-
         if (PlayerPrefs.HasKey("isRestart"))
         {
             int localValue = PlayerPrefs.GetInt("isRestart");
@@ -38,9 +33,10 @@ public class LoadPrefs : MonoBehaviour
 
         if (PlayerPrefs.HasKey("maxScore"))
         {
+            var pointsCalculator = GameObject.Find("UIManager").GetComponent<PointsCalculator>();
             int localValue = PlayerPrefs.GetInt("maxScore");
 
-            GameManager.Instance.maxScore = localValue;
+            pointsCalculator.maxScore = localValue;
         }
 
         if (PlayerPrefs.HasKey("level"))
@@ -62,6 +58,21 @@ public class LoadPrefs : MonoBehaviour
             int localIndex = PlayerPrefs.GetInt("pieceIndex");
 
             PiecesManager.Instance._index = localIndex;
+        }
+
+        if (PlayerPrefs.HasKey("currPlayerIndex"))
+        {
+            int index = PlayerPrefs.GetInt("currPlayerIndex");
+
+            instantiatePlayer.characterIndex = index;
+        }
+
+        if (PlayerPrefs.HasKey("magneticsValue"))
+        {
+            int value = PlayerPrefs.GetInt("magneticsValue");
+            var target = GameObject.Find("=== PLAYER ===").GetComponent<Magnetic_PowerUp>();
+
+            target.magneticValue = value;
         }
     }
 }

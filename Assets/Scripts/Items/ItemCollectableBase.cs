@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ItemCollectableBase : MonoBehaviour
 {
+    public PlayerController player;
+    public Vector3 targetPosition;
     public float timeToHide = 0.1f;
     public float timeToDestroy = 0.1f;
     public GameObject graphicItem;
@@ -11,9 +13,15 @@ public class ItemCollectableBase : MonoBehaviour
     [Header("Particle System")]
     public ParticleSystem particleSystem;
 
+    private void Awake()
+    {
+        player = GameObject.Find("=== PLAYER ===").GetComponent<PlayerController>();
+    }
 
-    /*[Header("Sounds")]
-    public AudioSource audioSource;*/
+    private void FixedUpdate()
+    {
+        targetPosition = player.currPosition;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -49,13 +57,6 @@ public class ItemCollectableBase : MonoBehaviour
 
     protected virtual void OnCollect()
     {
-        //VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.COLLECTCOINS, transform.position);
-
-        if (particleSystem != null)
-        {
-            particleSystem.transform.SetParent(null);
-            particleSystem.Play();
-        }
-
+        
     }
 }

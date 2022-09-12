@@ -4,7 +4,7 @@ using UnityEngine;
 using Singleton;
 using System;
 
-public class RollDice : Singleton<RollDice>
+public class RollDice : MonoBehaviour
 {
     public Rigidbody rigidbody;
     public Transform diceToRoll;
@@ -17,22 +17,22 @@ public class RollDice : Singleton<RollDice>
     public float startSFXDelay = 3;
     public bool canMove;
 
-    protected override void Awake()
+    private void OnEnable()
     {
-        base.Awake();
+        Actions.onGameStarted += InvokeStartRoll;
+        StopDiceByTrigger.onDiceTriggered += StopDiceAtTheEnd;
+    }
+
+    private void OnDisable()
+    {
+        Actions.onGameStarted -= InvokeStartRoll;
+        StopDiceByTrigger.onDiceTriggered -= StopDiceAtTheEnd;
     }
 
     private void OnValidate()
     {
         if (particleSystem == null) particleSystem = GetComponentInChildren<ParticleSystem>();
     }
-
-    #region === DEBUG ===
-    public void TurnCanRollTrue()
-    {
-        canMove = true;
-    }
-    #endregion
 
     // Update is called once per frame
     void Update()
@@ -47,13 +47,13 @@ public class RollDice : Singleton<RollDice>
 
     public void InvokeStartRoll()
     {
+        CallDiceSFX();
         Invoke(nameof(StartRoll), 3);
     }
 
     public void StartRoll()
     {
         canMove = true;
-        Actions.startTutorial();
     }
 
     public void DestroyDice()
@@ -71,8 +71,10 @@ public class RollDice : Singleton<RollDice>
         audioSource.Play();
     }
 
-    public void StopVFX()
+    void StopDiceAtTheEnd()
     {
+        canMove = false;
         particleSystem.Stop();
+        audioSource.Stop();
     }
 }

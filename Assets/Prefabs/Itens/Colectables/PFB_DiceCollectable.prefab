@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.4207332, y: -2.5878434, z: -28.417345}
   m_LocalScale: {x: 0.2, y: 10, z: 0.05}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2990068937295711614}
   m_Father: {fileID: 0}
@@ -46,14 +47,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae68de7d28aab5941b2f7b406de34cfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   timeToHide: 0.1
   timeToDestroy: 0.1
   graphicItem: {fileID: 2990068937296138590}
   particleSystem: {fileID: 0}
   collider: {fileID: 6798927320857949149}
   collect: 0
-  lerpSpeed: 5
-  minDistance: 1
+  lerpSpeed: 6
+  minDistance: 1.5
 --- !u!54 &2990068936683493588
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -164,13 +166,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bbbc25881226434b86bd98e9424cd6c, type: 3}
---- !u!1 &2990068937296138590 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: 3bbbc25881226434b86bd98e9424cd6c, type: 3}
-  m_PrefabInstance: {fileID: 2990068937296107518}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2990068937295711614 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 3bbbc25881226434b86bd98e9424cd6c, type: 3}
+  m_PrefabInstance: {fileID: 2990068937296107518}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2990068937296138590 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 3bbbc25881226434b86bd98e9424cd6c, type: 3}
   m_PrefabInstance: {fileID: 2990068937296107518}
   m_PrefabAsset: {fileID: 0}
